@@ -2,8 +2,9 @@
 
 class AdminController extends BaseController
 {
-    public function index()
+    public function index($param = '')
     {
-        echo "<br>index method of admin controller";
+        echo "index method of admin controller<br>";
+        echo $param;
     }
 }

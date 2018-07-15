@@ -3,7 +3,7 @@
 class App
 {
 
-    protected $controller = 'home';
+    protected $controller = 'HomeController';
     protected $method = 'index';
     protected $params = [];
 
@@ -11,17 +11,14 @@ class App
 
     public function __construct()
     {
-        echo "this is the constructor of the app core<br>";
-        print_r($this->parseUrl());
-
         $url_parts = $this->parseUrl();
 
         if(isset($url_parts[1])) {
             $controller_name = ucfirst($url_parts[1]) . 'Controller';
             if (class_exists($controller_name)) {
-                echo "found $controller_name<br>";
                 $this->controller = $controller_name;
             }
+            unset($url_parts[1]);
         }
         $this->controller = new $this->controller;
 
@@ -30,15 +27,19 @@ class App
             if(method_exists($this->controller, $method_name)){
                 $this->method = $method_name;
             }
+            unset($url_parts[2]);
         }
+
+        $this->params = $url_parts ? array_values($url_parts) : [];
 
         call_user_func_array([$this->controller, $this->method], $this->params);
     }
 
     public function parseUrl()
     {
-        return $this->url_elements = explode('/', $_SERVER['REQUEST_URI']);
-
+        $url_elements = explode('/', $_SERVER['REQUEST_URI']);
+        unset($url_elements[0]); // bodge
+        return $url_elements;
     }
 
 }
