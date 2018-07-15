@@ -5,7 +5,7 @@
         <title></title>
     </head>
     <body>
-        <h1>Admin</h1>
-        <a href="update.php">Update db from feed</a>
+        <h1>Events</h1>
+        <p>show event with id <?= $data['id'] ?></p>
     </body>
 </html>
