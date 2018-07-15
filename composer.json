@@ -4,7 +4,8 @@
     },
     "autoload": {
         "classmap": [
-            "app/core"
+            "app/core",
+            "app/controllers"
         ],
         "psr-4": {
             "App\\": "app/"

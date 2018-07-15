@@ -4,6 +4,6 @@ Class Test
 {
     public function __construct()
     {
-        echo "<br>constructor of Test class";
+        echo "this is the constructor of Test class<br>";
     }
 }

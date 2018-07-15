@@ -1,6 +1,13 @@
+Options -Indexes
+
 RewriteEngine on
+
+RewriteBase /
+
+RewriteCond $1 !^(images|js|css)
 
 RewriteCond %(REQUEST_FILENAME) !-f
 RewriteCond %(REQUEST_FILENAME) !-d
+RewriteCond %{REQUEST_FILENAME} !-l
 
 RewriteRule ^(.*)$ index.php?request=$1 [L,QSA]
