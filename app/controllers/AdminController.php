@@ -6,5 +6,7 @@ class AdminController extends BaseController
     {
         echo "index method of admin controller<br>";
         echo $param;
+
+        $this->view('admin/index', []); 
     }
 }

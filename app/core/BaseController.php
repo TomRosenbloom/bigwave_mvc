@@ -8,4 +8,10 @@ class BaseController
         $model = new $model;
         return $model;
     }
+
+    protected function view($view, $data)
+    {
+        echo "$view<br>";
+        require_once '../app/views/' . $view . '.blade.php';
+    }
 }
