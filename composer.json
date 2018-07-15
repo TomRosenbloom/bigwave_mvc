@@ -6,8 +6,7 @@
         "classmap": [
             "app/core",
             "app/controllers",
-            "app/models",
-            "app/views"
+            "app/models"
         ],
         "psr-4": {
             "App\\": "app/"
