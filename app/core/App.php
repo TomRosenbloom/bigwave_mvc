@@ -2,35 +2,22 @@
 
 class App
 {
-
+    protected $url_parts;
     protected $controller = 'HomeController';
     protected $method = 'index';
     protected $params = [];
 
-    protected $url_elements;
-
     public function __construct()
     {
-        $url_parts = $this->parseUrl();
+        $this->url_parts = $this->parseUrl();
 
-        if(isset($url_parts[1])) {
-            $controller_name = ucfirst($url_parts[1]) . 'Controller';
-            if (class_exists($controller_name)) {
-                $this->controller = $controller_name;
-            }
-            unset($url_parts[1]);
-        }
-        $this->controller = new $this->controller;
+        $this->controller = $this->setController();
 
-        if(isset($url_parts[2])) {
-            $method_name = $url_parts[2];
-            if(method_exists($this->controller, $method_name)){
-                $this->method = $method_name;
-            }
-            unset($url_parts[2]);
-        }
+        $this->setMethod();
 
-        $this->params = $url_parts ? array_values($url_parts) : [];
+        $this->params = $this->url_parts ? array_values($this->url_parts) : [];
+
+        echo $this->method . ' action of ' . $this->controller->getName() . ' with params ' . implode(" ", $this->url_parts);
 
         call_user_func_array([$this->controller, $this->method], $this->params);
     }
@@ -42,4 +29,33 @@ class App
         return $url_elements;
     }
 
+    public function setController()
+    {
+        if(isset($this->url_parts[1])) {
+            $controller_name = ucfirst($this->url_parts[1]) . 'Controller';
+            if (class_exists($controller_name)) {
+                unset($this->url_parts[1]);
+                return new $controller_name($controller_name);
+            }
+
+        }
+        // $this->controller = new $this->controller;
+        // return new $this->controller;
+    }
+
+    public function setMethod()
+    {
+        if(isset($this->url_parts[2])) {
+            $method_name = $this->url_parts[2];
+            if(method_exists($this->controller, $method_name)){
+                $this->method = $method_name;
+            }
+            unset($this->url_parts[2]);
+        }
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
 }
