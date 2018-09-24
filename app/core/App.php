@@ -26,7 +26,10 @@ class App
         if(!method_exists($this->controller, $this->method)) {
             throw new Exception($this->controller . ' has no action ' . $this->method);
         }
-        call_user_func_array([$this->controller, $this->method], $this->params);
+
+        $controller_callable = new $this->controller;
+
+        call_user_func_array([$controller_callable, $this->method], $this->params);
     }
 
     public function parseUrl()

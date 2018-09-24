@@ -4,7 +4,8 @@ class FeedController extends BaseController
 {
     public function read()
     {
-        return "all";
+        echo "<br>hello";
+        $this->view('feed/read');
     }
 
 }
