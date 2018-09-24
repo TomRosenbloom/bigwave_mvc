@@ -9,4 +9,9 @@ class Event
         // from the json feed and use the local database to get and display results
         // so the first thing I need to write is the thing that updates the local db from the feed
     }
+
+    public function refresh()
+    {
+
+    }
 }

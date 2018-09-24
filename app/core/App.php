@@ -10,52 +10,61 @@ class App
     public function __construct()
     {
         $this->url_parts = $this->parseUrl();
+        $this->setController($this->url_parts);
+        $this->setMethod($this->url_parts);
+        $this->setParams($this->url_parts);
 
-        $this->controller = $this->setController();
+        $this->executeControllerAction();
+    }
 
-        $this->setMethod();
-
-        $this->params = $this->url_parts ? array_values($this->url_parts) : [];
-
-        echo $this->method . ' action of ' . $this->controller->getName() . ' with params ' . implode(" ", $this->url_parts);
-
+    public function executeControllerAction()
+    {
+        echo $this->createMessage();
+        if (!class_exists($this->controller)){
+            throw new Exception('No controller called ' . $this->controller);
+        }
+        if(!method_exists($this->controller, $this->method)) {
+            throw new Exception($this->controller . ' has no action ' . $this->method);
+        }
         call_user_func_array([$this->controller, $this->method], $this->params);
     }
 
     public function parseUrl()
     {
         $url_elements = explode('/', $_SERVER['REQUEST_URI']);
-        unset($url_elements[0]); // bodge
         return $url_elements;
     }
 
-    public function setController()
+    public function setController($url_parts)
     {
-        if(isset($this->url_parts[1])) {
-            $controller_name = ucfirst($this->url_parts[1]) . 'Controller';
-            if (class_exists($controller_name)) {
-                unset($this->url_parts[1]);
-                return new $controller_name($controller_name);
-            }
-
+        if(isset($url_parts[1])) {
+            $this->controller = ucfirst($url_parts[1]) . 'Controller';
         }
-        // $this->controller = new $this->controller;
-        // return new $this->controller;
+        return $this;
     }
 
-    public function setMethod()
+    public function setMethod($url_parts)
     {
-        if(isset($this->url_parts[2])) {
-            $method_name = $this->url_parts[2];
-            if(method_exists($this->controller, $method_name)){
-                $this->method = $method_name;
-            }
-            unset($this->url_parts[2]);
+        if(isset($url_parts[2])) {
+            $this->method = $url_parts[2];
         }
+        return $this;
     }
 
-    public function getName()
+    public function setParams($url_parts)
     {
-        return $this->name;
+        if(array_key_exists(3, $url_parts)) {
+            $this->params = array_slice($url_parts,3);
+        }
+        return $this;
+    }
+
+    public function createMessage()
+    {
+        $msg = $this->method . ' action of ' . $this->controller;
+        if(count($this->params) > 0){
+            $msg .= ' with params ' . implode(", ", $this->params);
+        }
+        return $msg;
     }
 }

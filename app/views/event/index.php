@@ -6,6 +6,7 @@
     </head>
     <body>
         <h1>Events</h1>
-        <p>show one event</p>
+        <p><a href="/event/refresh">Refresh database from JSON feed</a></p>
+        <p>Show one event</p>
     </body>
 </html>
