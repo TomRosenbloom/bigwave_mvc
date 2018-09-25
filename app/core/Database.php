@@ -18,8 +18,8 @@ class Database {
 
         try {
             $dsn = $config->DB_SOURCE . ":host="  . $config->DB_HOST . ';dbname=' . $config->DB_DATABASE;
-            $_connection = new PDO($dsn, $config->DB_USERNAME, $config->DB_PASSWORD);
-            $_connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $this->_connection = new PDO($dsn, $config->DB_USERNAME, $config->DB_PASSWORD);
+            $this->_connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch(PDOException $e) {
             echo 'ERROR: ' . $e->getMessage();
         }
@@ -32,17 +32,13 @@ class Database {
         if(!(self::$_instance instanceof self)){
             self::$_instance = new self($config);
         }
+
         return self::$_instance;
     }
 
     public function getConnection()
     {
         return $this->_connection;
-    }
-
-    public function test()
-    {
-        return $this->_connection->query('SELECT * FROM events'); // _connection is null
     }
 
 }

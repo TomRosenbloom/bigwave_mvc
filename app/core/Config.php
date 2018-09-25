@@ -1,5 +1,7 @@
 <?php
 
+namespace core;
+
 class Config
 {
 
@@ -7,7 +9,7 @@ class Config
 
     public function __construct()
     {
-        $this->config = parse_ini_file('../config/config.ini');
+        $this->config = parse_ini_file('C:\xampp\htdocs\bigwave_mvc\app\config\config.ini'); // need to use a base_url type of thing
     }
 
     public function __get($key)

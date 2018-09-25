@@ -19,7 +19,7 @@ class App
 
     public function executeControllerAction()
     {
-        echo $this->createMessage();
+        //echo $this->createMessage();
         if (!class_exists($this->controller)){
             throw new Exception('No controller called ' . $this->controller);
         }
