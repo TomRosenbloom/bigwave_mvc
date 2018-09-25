@@ -1,7 +1,12 @@
 <?php
 
-use core\Config; // don't actually need to do this - in this little system no reason not to just use global namespace
+use core\Config;
 
+/**
+ * [FeedController description]
+ *
+ * NB should not be doing db queries in a controller...
+ */
 class FeedController extends BaseController
 {
 
