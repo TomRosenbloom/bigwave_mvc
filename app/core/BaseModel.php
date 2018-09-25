@@ -24,14 +24,17 @@ abstract class BaseModel
 
     public function dbConnect()
     {
-
-
         $db = Database::getInstance($this->config);
         try {
             $this->connection = $db->getConnection();
         } catch(PDOException $e) {
             echo $e->getMessage();
         }
+    }
+
+    public function doQuery($query, $params)
+    {
+
     }
 
     public function getOneFromId($id)
@@ -49,7 +52,15 @@ abstract class BaseModel
 
     public function getAll()
     {
+        try{
+            $stmt = $this->connection->prepare('SELECT * FROM ' . $this->table);
+            $stmt->execute();
+            $data = $stmt->fetchAll();
+        } catch(PDOException $e){
+            echo 'ERROR: ' . $e->getMessage();
+        }
 
+        return $data;
     }
 
 }

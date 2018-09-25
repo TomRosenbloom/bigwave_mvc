@@ -9,7 +9,10 @@ class EventController extends BaseController
 
     public function show_all()
     {
+        $event = new Event();
+        $events = $event->getAll();
 
+        $this->view('event/show_all', $events); // doesn't matter what you call it here, it will be $data in the view
     }
 
     public function show_one($id = '')
@@ -18,8 +21,6 @@ class EventController extends BaseController
         $event = new Event();
         $data = $event->getOneFromId($id);
 
-        // echo "<pre>"; var_dump($data); echo "</pre>";
-
-        $this->view('event/show_one', ['data'=>$data]);
+        $this->view('event/show_one', $data);
     }
 }
