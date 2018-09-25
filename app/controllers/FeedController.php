@@ -4,24 +4,54 @@ use core\Config; // don't actually need to do this - in this little system no re
 
 class FeedController extends BaseController
 {
-    public function read()
-    {
-        $config = new Config;
 
-        $db = Database::getInstance($config);
+    protected $connection;
+    protected $config;
+
+    public function __construct()
+    {
+        $this->config = new Config;
+
+        $db = Database::getInstance($this->config);
         try {
-            $connection = $db->getConnection();
+            $this->connection = $db->getConnection();
         } catch(PDOException $e) {
             echo $e->getMessage();
         }
+    }
 
-        // $test = $connection->query('SELECT * FROM events'); // connection is null
+    public function readAll()
+    {
+        $data = $this->connection->query('SELECT * FROM events')->fetchAll();
+        var_dump(json_encode($data));
+    }
 
-        $jsonUrl = $config->JSON_URL;
+    public function readOne()
+    {
+        $id = 1;
+        try{
+            // $data = $this->connection
+            //     ->prepare('SELECT * FROM events WHERE id = ?')
+            //     ->execute([$id])
+            //     ->fetch();
+
+            $stmt = $this->connection->prepare('SELECT * FROM events WHERE id = ?');
+            $stmt->execute([$id]);
+            $data = $stmt->fetch();
+        } catch(PDOException $e){
+            echo 'ERROR: ' . $e->getMessage();
+        }
+        $json = json_encode($data);
+        $this->view('feed/readOne', ['json'=>$json]);
+    }
+
+    public function refresh()
+    {
+        $jsonUrl = $this->config->JSON_URL;
         $json = file_get_contents($jsonUrl);
         $data = json_decode($json);
 
-        $connection->query('TRUNCATE TABLE events')->execute(); // danger
+        $this->connection->query('TRUNCATE TABLE events')->execute(); // danger
 
         foreach($data->items as $item) {
 
@@ -38,23 +68,14 @@ class FeedController extends BaseController
             // perhaps logo? or something generic?
             $url = $item->data->url;
 
-            echo 'name: ', $name, '<br>';
-            echo 'description: ', $description, '<br>';
-            echo 'date: ', $date, '<br>';
-            echo 'location: ', $location, '<br>';
-            echo 'lat: ', $url, '<br>';
-            echo 'long: ', $url, '<br>';
-            echo 'thumbnail: ', '<br>';
-            echo 'url: ', $url, '<br>';
-            echo '<br>';
-
             try {
                 $sql = 'INSERT INTO events (title, description) VALUES(?,?)';
-                $connection->prepare($sql)->execute([$name, $description]);
+                $this->connection->prepare($sql)->execute([$name, $description]);
             } catch(Exception $e) {
                 echo 'ERROR: ' . $e->getMessage();
             }
-
         }
+
+        $this->view('feed/refresh', []);
     }
 }
