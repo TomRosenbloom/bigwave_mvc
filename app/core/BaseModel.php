@@ -42,7 +42,7 @@ abstract class BaseModel
         try{
             $stmt = $this->connection->prepare('SELECT * FROM ' . $this->table . ' WHERE id = ?');
             $stmt->execute([$id]);
-            $data = $stmt->fetch();
+            $data = $stmt->fetch(PDO::FETCH_ASSOC);
         } catch(PDOException $e){
             echo 'ERROR: ' . $e->getMessage();
         }
@@ -55,7 +55,7 @@ abstract class BaseModel
         try{
             $stmt = $this->connection->prepare('SELECT * FROM ' . $this->table);
             $stmt->execute();
-            $data = $stmt->fetchAll();
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch(PDOException $e){
             echo 'ERROR: ' . $e->getMessage();
         }

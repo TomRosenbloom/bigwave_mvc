@@ -74,8 +74,8 @@ class FeedController extends BaseController
             $url = $item->data->url;
 
             try {
-                $sql = 'INSERT INTO events (title, description) VALUES(?,?)';
-                $this->connection->prepare($sql)->execute([$name, $description]);
+                $sql = 'INSERT INTO events (title, description, event_date, latitude, longitude) VALUES(?,?,?,?,?)';
+                $this->connection->prepare($sql)->execute([$name, $description, $date, $lat, $long]);
             } catch(Exception $e) {
                 echo 'ERROR: ' . $e->getMessage();
             }
