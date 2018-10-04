@@ -11,10 +11,6 @@
         <div id="map" style="height:400px;">
         </div>
 
-
-
-        <?php //echo "<pre>"; var_dump($data); echo "</pre>"; ?>
-
         <?php $events = json_encode($data); ?>
 
         <script type='text/javascript'>
@@ -58,21 +54,11 @@
                     });
                     markers.push(marker);
                     oms.addMarker(marker); // use spiderfier to separate markers on same location
-
-                    // nb there is a more elegant way of doing this. This kind of thing:
-                    // var markers = locations.map(function(location, i) {
-                    //      return new google.maps.Marker({
-                    //      position: location, // depending on you data, you might not need to separately specify lat & long
-                    //      label: labels[i % labels.length] // this example used a separate array of labels
-                    // });
-
                 }
                 var markerCluster = new MarkerClusterer(map, markers,
                      {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
                      minClusterZoom = 14;
-                markerCluster.setMaxZoom(minClusterZoom); // to uncluster markers at same location
-                                                          // works to a point but doesn't show all the markers
-                                                          // For it to work properly I think I need 'Spiderfier'
+                markerCluster.setMaxZoom(minClusterZoom);
             }
             </script>
 

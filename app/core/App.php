@@ -40,7 +40,7 @@ class App
 
     public function setController($url_parts)
     {
-        if(isset($url_parts[1])) {
+        if(isset($url_parts[1]) && !empty($url_parts[1])) {
             $this->controller = ucfirst($url_parts[1]) . 'Controller';
         }
         return $this;
