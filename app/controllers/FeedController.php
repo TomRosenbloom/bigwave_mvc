@@ -3,7 +3,8 @@
 use core\Config;
 
 /**
- * [FeedController description]
+ * matters to do with reading the Lets Ride feed, AND the local API
+ * (they should probably be in separate controllers)
  *
  * NB should not be doing db queries in a controller...
  */
@@ -25,6 +26,10 @@ class FeedController extends BaseController
         }
     }
 
+    /**
+     * [readAll description]
+     * @return [type] [description]
+     */
     public function readAll()
     {
         $data = $this->connection->query('SELECT * FROM events')->fetchAll();

@@ -3,18 +3,51 @@
     <head>
         <meta charset="utf-8">
         <title></title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+        <style media="screen">
+            /* make list scrollable */
+            #listItems {
+                height: 600px
+                overflow: scroll;
+                padding: 10px;
+                border: solid grey 1px;
+                border-radius: 2px;
+                box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px; // copied from google maps callout
+            }
+        </style>
+
+        <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
     </head>
     <body>
-        <h1>All events</h1>
-        <h2>Map</h2>
 
-        <div id="map" style="height:400px;">
+        <div class="container">
+            <h1>All events</h1>
+            <div class="" id="mapContainer">
+                <h2>Map</h2>
+                <div id="map" style="height:400px;">
+                </div>
+            </div>
+            <div class="" id="listContainer">
+                <h2>List</h2>
+                <div id="listItems" style="height: 600px; overflow: scroll;">
+                    <?php foreach($data['events_arr'] as $event) { ?>
+                        <div class="" id="event_<?= $event['id']; ?>">
+                            <h3><?php echo $event['title']; ?></h3>
+                            <p>Date: <?php echo $event['event_date']; ?></p>
+                            <p><?php echo $event['description']; ?></p>
+                        </div>
+                    <?php } ?>
+                </div>
+            </div>
         </div>
 
-        <?php $events = json_encode($data); ?>
 
         <script type='text/javascript'>
-            <?php echo "var events=$events;\n"; ?>
+            <?php echo "var events=" . $data['events_json'] . "\n"; ?>
 
             var markers = [];
 
@@ -35,6 +68,7 @@
                     var lng = events[key].longitude;
                     var title = events[key].title;
                     var description = events[key].description;
+                    var id = events[key].id;
 
                     var contentString = '<div id="content">'+
                         '<h1 id="firstHeading" class="firstHeading">' + title + '</h1>'+
@@ -46,11 +80,20 @@
                         position: new google.maps.LatLng(lat,lng),
                         name: title,
                         map: map,
+                        id: id,
                         content: contentString // nb there is nothing special in the name 'content'
                     });
                     marker.addListener('spider_click', function() {
                       infoWindow.setContent(this.content);
                       infoWindow.open(map, this);
+
+                      console.log(this.id);
+
+                      $('#listItems').scroll;
+                      $('#listItems').animate({
+                            scrollTop: $("#event_"+this.id).offset().top // not returning quite the right position
+                        }, 2000);
+
                     });
                     markers.push(marker);
                     oms.addMarker(marker); // use spiderfier to separate markers on same location
@@ -61,13 +104,6 @@
                 markerCluster.setMaxZoom(minClusterZoom);
             }
             </script>
-
-        <h2>List</h2>
-        <?php foreach($data as $event) { ?>
-            <h3><?php echo $event['title']; ?></h3>
-            <p>Date: <?php echo $event['event_date']; ?></p>
-            <p><?php echo $event['description']; ?></p>
-        <?php } ?>
 
         <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
         </script>

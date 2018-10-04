@@ -10,9 +10,10 @@ class EventController extends BaseController
     public function show_all()
     {
         $event = new Event();
-        $events = $event->getAll();
+        $data['events_arr'] = $event->getAll();
+        $data['events_json'] = json_encode($event->getAll());
 
-        $this->view('event/show_all', $events); // doesn't matter what you call it ($events) here, it will be $data in the view
+        $this->view('event/show_all', $data);
     }
 
     public function show_one($id = '')
