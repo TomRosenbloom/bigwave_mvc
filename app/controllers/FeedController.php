@@ -27,7 +27,8 @@ class FeedController extends BaseController
     }
 
     /**
-     * [readAll description]
+     * get all event data from db and dump as json
+     *
      * @return [type] [description]
      */
     public function readAll()
@@ -36,6 +37,11 @@ class FeedController extends BaseController
         var_dump(json_encode($data));
     }
 
+    /**
+     * get one event from db and display as json, using a view
+     *
+     * @return [type] [description]
+     */
     public function readOne()
     {
         $id = 1;
@@ -55,6 +61,14 @@ class FeedController extends BaseController
         $this->view('feed/readOne', ['json'=>$json]);
     }
 
+    /**
+     * refresh local db from Lets Ride feed
+     * NB seems like the feed contains past events?
+     * That's ok. But something else wrong with dates - mostly 2500-01-01...
+     * (no future events with valid dates...)
+     *
+     * @return [type] [description]
+     */
     public function refresh()
     {
         $jsonUrl = $this->config->JSON_URL;

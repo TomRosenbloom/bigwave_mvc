@@ -10,11 +10,17 @@ class EventController extends BaseController
     public function show_all()
     {
         $event = new Event();
-        $data['events_arr'] = $event->getAll();
-        $data['events_json'] = json_encode($event->getAll());
+        $data['events_arr'] = $event->getAllWhere(array(
+            array(
+            'name' => 'event_date',
+            'comparison' => '>',
+            'value' => date('Y-m-d H:i:s')// MySQL-specific!!
+            )));
+        $data['events_json'] = json_encode($data['events_arr']);
 
         $this->view('event/show_all', $data);
     }
+
 
     public function show_one($id = '')
     {

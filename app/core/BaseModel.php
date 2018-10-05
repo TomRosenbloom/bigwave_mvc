@@ -63,4 +63,31 @@ abstract class BaseModel
         return $data;
     }
 
+    public function getAllWhere(array $paramTuples)
+    {
+        // make a where clause from params
+        // nb this would be easier to do fluent style because can just use andwhere
+        $paramVals = [];
+        if(count($paramTuples) > 0){
+            $where = ' WHERE ';
+            foreach($paramTuples as $paramTuple){
+                $name = $paramTuple['name'];
+                $value = $paramTuple['value'];
+                $comparison = $paramTuple['comparison'];
+                $paramVals[] = $value;
+                $where .= ' ' . $name . ' ' . $comparison . ' ? ';
+            }
+        }
+        // echo $where;
+
+        try{
+            $stmt = $this->connection->prepare('SELECT * FROM ' . $this->table . $where);
+            $stmt->execute($paramVals);
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch(PDOException $e){
+            echo 'ERROR: ' . $e->getMessage();
+        }
+
+        return $data;
+    }
 }
