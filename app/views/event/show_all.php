@@ -87,11 +87,12 @@
                       infoWindow.setContent(this.content);
                       infoWindow.open(map, this);
 
-                      console.log(this.id);
-
-                      $('#listItems').scroll;
-                      $('#listItems').animate({
-                            scrollTop: $("#event_"+this.id).offset().top // not returning quite the right position
+                      // scroll the list to clicked item
+                      var parentDiv = $('#listItems');
+                      var innerListItem = $("#event_"+this.id);
+                      parentDiv.animate({
+                            scrollTop:
+                                parentDiv.scrollTop() + (innerListItem.position().top - parentDiv.position().top)
                         }, 2000);
 
                     });
