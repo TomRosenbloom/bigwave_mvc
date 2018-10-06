@@ -75,10 +75,10 @@ abstract class BaseModel
                 $value = $paramTuple['value'];
                 $comparison = $paramTuple['comparison'];
                 $paramVals[] = $value;
-                $where .= ' ' . $name . ' ' . $comparison . ' ? ';
+                $where .= ' ' . $name . ' ' . $comparison . ' ? AND ';
             }
+            $where = substr($where, 0, strlen($where) - 4);
         }
-        // echo $where;
 
         try{
             $stmt = $this->connection->prepare('SELECT * FROM ' . $this->table . $where);

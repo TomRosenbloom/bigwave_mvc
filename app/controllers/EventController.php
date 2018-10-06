@@ -20,7 +20,14 @@ class EventController extends BaseController
 
     public function show_all_in_range()
     {
-
+        // so in the controller, we just need to do the organisational stuff
+        // create a form to get the post code and range, then hand the form inputs
+        // to the model to get back array of events in range and hand these back to view
+        $event = $this->model($this->modelName);
+        echo "<pre>";
+        //var_dump($event->events_in_square(50, 52, 0)); // nb I see from this why PHPstorm has that feature that allows you to define in top of page comment block a local property as a class instance i.e. to make autocompletes work
+        var_dump($event->events_in_circle(50, 52, 0));
+        echo "</pre>";
     }
 
     public function show_all()
