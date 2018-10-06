@@ -3,10 +3,12 @@
 abstract class BaseController
 {
 
+    private $model;
+
     protected function model($model)
     {
-        $model = new $model;
-        return $model;
+        $this->model = new $model;
+        return $this->model;
     }
 
     protected function view($view, $data = [])
