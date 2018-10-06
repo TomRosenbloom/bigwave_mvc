@@ -5,9 +5,9 @@ abstract class BaseController
 
     private $model;
 
-    protected function model($model)
+    protected function model($modelName)
     {
-        $this->model = new $model;
+        $this->model = new $modelName;
         return $this->model;
     }
 

@@ -3,21 +3,14 @@
 class EventController extends BaseController
 {
 
-    protected $event;
+    protected $modelName;
 
     /**
-     * instantiate model in constructor - good idea, or no?
-     * I suppose the question is, do we necessarily want to instantiate an
-     * event model for every use of EventController?
-     * The answer to that is no - for e.g. in any case where we have a
-     * static page connected with events
-     * Maybe set the name of the model in the constructor and only use it to
-     * create a model when necessary? Setting the name seems sensible as it
-     * opens the way for various automations
+     * set model identifier in constructor
      */
     public function __construct()
     {
-        $this->event = $this->model("Event");
+        $this->modelName = "Event";
     }
 
     public function index()
@@ -32,8 +25,8 @@ class EventController extends BaseController
 
     public function show_all()
     {
-        // $event = new Event();
-        $data['events_arr'] = $this->event->getAll();
+        $event = $this->model($this->modelName);
+        $data['events_arr'] = $event->getAll();
         $data['events_json'] = json_encode($data['events_arr']);
 
         $this->view('event/show_all', $data);
