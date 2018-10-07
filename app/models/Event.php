@@ -48,7 +48,7 @@ class Event extends BaseModel
         return 6371 * $distance;
     }
 
-    public function events_in_square($distance, $origin_lat, $origin_long)
+    public function events_in_square(int $distance, float $origin_lat, float $origin_long)
     {
         $radius = 6371;
         $north_lat = $origin_lat + rad2deg($distance/$radius);
