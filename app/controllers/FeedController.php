@@ -67,6 +67,8 @@ class FeedController extends BaseController
      * That's ok. But something else wrong with dates - mostly 2500-01-01...
      * (no future events with valid dates...)
      *
+     * More importantly, SHOULD NOT be doing all of the below in a controller!!!
+     *
      * @return [type] [description]
      */
     public function refresh()

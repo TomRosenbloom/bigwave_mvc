@@ -14,7 +14,7 @@
                         <div class="form-row">
                             <div class="form-group col-md-8" id="postcode-input">
                                 <label for="postcode">Postcode: </label>
-                                <input class="form-control" type="text" name="postcode" value="" placeholder="enter a valid UK postcode">
+                                <input class="form-control" type="text" name="postcode" value="<?= $data['postcode']; ?>" placeholder="enter a valid UK postcode">
                             </div>
                         </div>
                         <div class="form-row">

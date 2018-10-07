@@ -17,6 +17,9 @@ class Event extends BaseModel
     //    - this is an easy db query as it uses just greater/less than
     // 3. make a function that extracts just the events in a circle around given lat/lng
     //    - uses 1. to test the results of 2. and reject ones too far from centre
+    //
+    //    Oh and will need a function to get lat/lng from postcode
+    //    ...will put that in here for noow, but doesn't strictly belong (need a helpers folder?)
 
 
     /**
@@ -69,9 +72,19 @@ class Event extends BaseModel
         $events = [];
         $eventsInSquare = $this->events_in_square($radius, $origin_lat, $origin_long);
         foreach($eventsInSquare as $event){
-            $events[$event['id']] = $event['title'];
+            if($this->distance($event['latitude'], $event['longitude'], $origin_lat, $origin_long) <= $radius){
+                // $events[$event['id']] = $event['title'];
+                $events[] = $event;
+            }
         }
         return $events;
     }
 
+    public function postcode_lat_lng($postcode)
+    {
+        $postcode_lookup_url = 'http://api.postcodes.io/postcodes/' . $postcode;
+        $json = file_get_contents($postcode_lookup_url);
+        $data = json_decode($json, true);
+        return array($data['result']['latitude'],$data['result']['longitude']);
+    }
 }
