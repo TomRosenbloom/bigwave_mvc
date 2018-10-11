@@ -6,7 +6,10 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
         <style media="screen">
-            /* make list scrollable */
+            #postcode-input, #range-input {
+                display: inline;
+            }
+
             #listItems {
                 height: 600px
                 overflow: scroll;
@@ -15,6 +18,8 @@
                 border-radius: 2px;
                 box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px; // copied from google maps callout
             }
+
+
         </style>
 
         <script
@@ -25,39 +30,46 @@
     <body>
 
         <div class="container">
-            <h1>Events in range</h1>
+            <h1>LetsRide Cycling Events</h1>
 
-            <div class="" id="formContainer">
-                <h2>Range</h2>
-                <div class="row">
-                    <div class="w-100" id="form">
-                        <form class="" action="" method="post">
-                            <div class="form-row">
-                                <div class="form-group col-md-8" id="postcode-input">
-                                    <label for="postcode">Postcode: </label>
-                                    <input class="form-control" type="text" name="postcode" value="<?= $data['post_vars']['postcode']; ?>" placeholder="enter a valid UK postcode">
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group col-md-8" id="range-input">
-                                    <label for="range">Range: </label>
-                                    <input class="form-control" type="text" name="range" value="<?= $data['post_vars']['range']; ?>" placeholder="enter a range in km">
-                                </div>
-                            </div>
-                            <input class="btn btn-primary" type="submit" value="Submit">
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            <div class="" id="mapContainer">
-                <h2>Map</h2>
+            <div class="listEvent" id="mapContainer">
                 <div id="map" style="height:400px;">
                 </div>
             </div>
 
+            <div id="formContainer">
+                <h2>Search</h2>
+                    <div id="form">
+                        <form class="" action="" method="post">
+                            <div class="form-group row">
+                                    <label for="postcode" class="col-sm-1">Postcode: </label>
+                                    <div class="col-sm-3">
+                                        <input class="form-control" type="text" name="postcode" value="<?= $data['post_vars']['postcode'] ?? ''; ?>" placeholder="enter a valid UK postcode">
+                                    </div>
+
+                                    <label for="range" class="col-sm-1">Range: </label>
+                                    <div class="col-sm-3">
+                                        <input class="form-control" type="text" name="range" value="<?= $data['post_vars']['range'] ?? ''; ?>" placeholder="enter a range in km">
+                                    </div>
+
+                                <div class="col-sm-1">
+                                    <input class="btn btn-primary" type="submit" value="Submit">
+                                </div>
+                                <div class="col-sm-1">
+                                    <input class="btn btn-secondary" name="clear" type="submit" value="Clear">
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+
+<div class="message">
+    <?php echo $data['message'] ?? ''; ?>
+</div>
+            </div>
+
+
             <div class="" id="listContainer">
-                <h2>List</h2>
                 <div id="listItems" style="height: 600px; overflow: scroll;">
                     <?php foreach($data['events_arr'] as $event) { ?>
                         <div class="" id="event_<?= $event['id']; ?>">
@@ -119,8 +131,20 @@
                             scrollTop:
                                 parentDiv.scrollTop() + (innerListItem.position().top - parentDiv.position().top)
                         }, 2000);
+                      innerListItem.addClass("alert alert-primary");
+
+                      // keep checking the info window to see if it is still open
+                      // https://stackoverflow.com/questions/6777721/google-maps-api-v3-infowindow-close-event-callback
+                      setInterval(function () {
+                            if(!infoWindow.getMap()) {
+                                innerListItem.removeClass("alert alert-primary");
+                            }
+                        }, 1000);
+
 
                     });
+
+
                     markers.push(marker);
                     oms.addMarker(marker); // use spiderfier to separate markers on same location
                 }
