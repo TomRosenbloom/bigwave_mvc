@@ -21,8 +21,8 @@ class Config
 
     public function __construct()
     {
-        $this->set_app_root();
-        $this->set_url_root();
+        $this->app_root = dirname(dirname(__FILE__));
+        $this->url_root = "http://localhost.bigwavemvc";
         $this->config = parse_ini_file($this->app_root . '\config\config.ini'); // need to use a base_url type of thing
     }
 
@@ -41,19 +41,4 @@ class Config
         throw new \Exception('Invalid configuration option: ' . $key);
     }
 
-    /**
-     * set the physical root on web server
-     */
-    public function set_app_root()
-    {
-        $this->app_root = dirname(dirname(__FILE__));
-    }
-
-    /**
-     * set base url
-     */
-    public function set_url_root()
-    {
-        $this->url_root = "http://localhost.bigwavemvc";
-    }
 }
