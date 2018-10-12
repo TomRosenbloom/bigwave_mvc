@@ -11,4 +11,7 @@
 
 require __DIR__.'\..\vendor\autoload.php';
 
+use core\Config;
+$config = new Config();
+
 $app = new App();

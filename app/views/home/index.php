@@ -1,10 +1,5 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-    <head>
-        <meta charset="utf-8">
-        <title></title>
-    </head>
-    <body>
-        <p>Home page</p>
-    </body>
-</html>
+<?php require APP_ROOT . '/views/inc/header.php'; ?>
+
+<p>Home page</p>
+
+<?php require APP_ROOT . '/views/inc/footer.php'; ?>
