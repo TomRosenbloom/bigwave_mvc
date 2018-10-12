@@ -54,6 +54,15 @@ class App
         return $this;
     }
 
+    /**
+     * extract params (everything after controller and action) from url
+     *
+     * [in many if not most basic MVC examples you'll see unset($url[0]) unset($url[1])
+     * so that the remaining part is params - I had it that way originally but changed it
+     * and I can't remember why exactly]
+     *
+     * @param [type] $url_parts [description]
+     */
     public function setParams($url_parts)
     {
         if(array_key_exists(3, $url_parts)) {
@@ -62,6 +71,11 @@ class App
         return $this;
     }
 
+    /**
+     * not an essential MVC componenet, just for testing
+     * 
+     * @return [type] [description]
+     */
     public function createMessage()
     {
         $msg = $this->method . ' action of ' . $this->controller;

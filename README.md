@@ -23,7 +23,7 @@ This is a home-rolled basic MVC application.
 - htaccess file passes css/js/image requests to relevant folders, re-directs all others to index.php which includes autoloader (Composer autoloader) and bootstraps the application
 - core component classes in /core/
   - App - parses url and executes controller action
-  - Config - returns config values from config.ini
+  - Config - sets config values locally or returns from config.ini [when running on local machine - config.ini is not uploaded to live server]
   - Database - singleton database connection
   - BaseModel - abstract base class for models. Defines common model properties and methods e.g. getWhere() which takes an array of 'parameter tuples' - name, value, comparator - to construct a SELECT ... WHERE query
   - BaseController - abstract base class for controllers
