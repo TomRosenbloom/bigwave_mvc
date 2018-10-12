@@ -17,8 +17,9 @@ class EventController extends BaseController
     {
         $this->view('event/index','');
     }
+
     /**
-     * show events within given range of a given postcode NEWER VERSION
+     * show events within given range of a given postcode
      *
      */
     public function show_in_range()
@@ -59,36 +60,11 @@ class EventController extends BaseController
             // create a flash messaging component?
             $data['message'] = count($data['events_arr']) . ' events';
 
-
         }
 
         $this->view('event/show_in_range', $data);
     }
 
-    /**
-     * show events within given range of a given postcode OLDER VERSION
-     *
-     * @return array an array of event details
-     */
-    public function show_all_in_range()
-    {
-        $this->view('event/range_form',$this->getRequest()->getPostVars());
-
-        if($this->getRequest()->getMethod() === 'POST') {
-            $data = $this->getRequest()->getPostVars();
-            $range = intval($data['range']);
-            $postcode = $data['postcode']; // VALIDATION!!
-
-            $event = $this->model($this->modelName);
-
-            list($lat, $lng) = $event->postcode_lat_lng($postcode);
-
-            echo "<pre>";
-            //var_dump($event->events_in_square(50, 52, 0)); // nb I see from this why PHPstorm has that feature that allows you to define in top of page comment block a local property as a class instance i.e. to make autocompletes work
-            var_dump($event->events_in_circle($range, $lat, $lng));
-            echo "</pre>";
-        }
-    }
 
     public function show_all()
     {

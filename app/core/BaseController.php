@@ -13,6 +13,8 @@ abstract class BaseController
 
     /**
      * this is super primitive...
+     * Should create a View class to be instantiated and used here
+     * ...something that has methods to take view file name, view data, and then attempt to render a view
      *
      * @param  [type] $view [description]
      * @param  array  $data [description]

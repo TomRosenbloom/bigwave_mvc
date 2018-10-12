@@ -15,13 +15,17 @@ abstract class BaseModel
     protected $config;
     protected $table;
 
+    protected $validation_rules;
+
     public function __construct($table)
     {
-        $this->config = new Config;
+        $this->config = new Config; // don't like this - this is like creating a global. Only justified if every method uses config - ?
         $this->table = $table;
         $this->dbConnect();
     }
 
+    // make database connection
+    // [should this *return* a connection?]
     public function dbConnect()
     {
         $db = Database::getInstance($this->config);
@@ -30,11 +34,6 @@ abstract class BaseModel
         } catch(PDOException $e) {
             echo $e->getMessage();
         }
-    }
-
-    public function doQuery($query, $params)
-    {
-
     }
 
     public function getOneFromId($id)
@@ -90,4 +89,10 @@ abstract class BaseModel
 
         return $data;
     }
+
+    public function doQuery($query, $params)
+    {
+        // execute a query passed in as string
+    }
+
 }
