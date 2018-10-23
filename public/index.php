@@ -12,6 +12,6 @@
 require __DIR__.'\..\vendor\autoload.php';
 
 use core\Config;
-$config = new Config();
+$config = Config::getInstance();
 
 $app = new App();

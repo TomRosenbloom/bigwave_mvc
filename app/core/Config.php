@@ -16,24 +16,33 @@ namespace core;
  */
 class Config
 {
-
+    static $_instance;
     protected $config = array();
 
-    // protected $app_root; // physical root of app folder on server, e.g. xampp/htdocs/myMVC/app - for includes etc
-    // protected $url_root; // url root e.g. http://myMVC - for links in views etc.
-    // protected $site_name;
-
-    public function __construct()
+    private function __construct()
     {
-        // $this->app_root = dirname(dirname(__FILE__));
-        // $this->url_root = "http://localhost.bigwavemvc";
-        // $this->site_name = "DIY MVC";
-
         define('APP_ROOT', dirname(dirname(__FILE__)));
         define('URL_ROOT', "http://localhost.bigwavemvc");
         define('SITE_NAME', "DIY MVC");
 
-        $this->config = parse_ini_file(APP_ROOT . '\config\config.ini'); // need to use a base_url type of thing
+        $this->config = parse_ini_file(APP_ROOT . '\config\config.ini');
+
+        define('DB_SOURCE', $this->DB_SOURCE);
+        define('DB_HOST', $this->DB_HOST);
+        define('DB_DATABASE', $this->DB_DATABASE);
+        define('DB_USERNAME', $this->DB_USERNAME);
+        define('DB_PASSWORD', $this->DB_PASSWORD);
+    }
+
+    private function __clone() {}
+
+    public static function getInstance()
+    {
+        if(!(self::$_instance instanceof self)){
+            self::$_instance = new self();
+        }
+
+        return self::$_instance;
     }
 
     /**

@@ -16,9 +16,7 @@ class FeedController extends BaseController
 
     public function __construct()
     {
-        $this->config = new Config;
-
-        $db = Database::getInstance($this->config);
+        $db = Database::getInstance();
         try {
             $this->connection = $db->getConnection();
         } catch(PDOException $e) {

@@ -19,7 +19,6 @@ abstract class BaseModel
 
     public function __construct($table)
     {
-        $this->config = new Config; // don't like this - this is like creating a global. Only justified if every method uses config - ?
         $this->table = $table;
         $this->dbConnect();
     }
@@ -93,6 +92,11 @@ abstract class BaseModel
     public function doQuery($query, $params)
     {
         // execute a query passed in as string
+        // Traversy puts basic database query operations in his database class
+        // i.e. make query, prepare statement, bind values, execute, which is a good approach I think
+        // Also he has the methods I have above for getting all, getting where, count rows, etc in that
+        // database class, not in a base model class like I'm doing here
+        // Will be interesting to see if he has a base model later on and if so what he has in it
     }
 
 }
