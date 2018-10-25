@@ -48,7 +48,7 @@ class App
 
     public function setMethod($url_parts)
     {
-        if(isset($url_parts[2])) {
+        if(isset($url_parts[2]) && !empty($url_parts[2])) {
             $this->method = $url_parts[2];
         }
         return $this;
@@ -73,7 +73,7 @@ class App
 
     /**
      * not an essential MVC componenet, just for testing
-     * 
+     *
      * @return [type] [description]
      */
     public function createMessage()
