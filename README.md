@@ -15,7 +15,7 @@ This is a home-rolled basic MVC application.
   - selecting event in map automatically scrolls list [and vice versa]
 - searching and filtering of events
   - events within range of postcode
-- 
+-
 
 ## MVC features:
 
@@ -27,6 +27,7 @@ This is a home-rolled basic MVC application.
   - Database - singleton database connection
   - BaseModel - abstract base class for models. Defines common model properties and methods e.g. getWhere() which takes an array of 'parameter tuples' - name, value, comparator - to construct a SELECT ... WHERE query
   - BaseController - abstract base class for controllers
+  - view templates
 
 
 
