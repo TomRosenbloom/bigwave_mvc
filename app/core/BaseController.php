@@ -11,6 +11,16 @@ abstract class BaseController
         return $this->model;
     }
 
+    protected function getValidationRules()
+    {
+        return $this->model->validation_rules;
+    }
+
+    protected function isValid($post_data){
+        $rules = $this->getValidationRules();
+        return filter_input_array(INPUT_POST, $rules);
+    }
+
     /**
      * this is super primitive...
      * Should create a View class to be instantiated and used here

@@ -44,4 +44,12 @@ class Request
             return 0;
         }
     }
+
+    // this is the starting point of how to write a validation structure
+    // will need to define 'rules' in the model
+    // note the distinction between sanitisation and validation
+    public function filterPostVars($post_data, $rules)
+    {
+
+    }
 }

@@ -15,12 +15,13 @@ abstract class BaseModel
     protected $config;
     protected $table;
 
-    protected $validation_rules;
+    protected $validation_rules; /// I want setting of validation rules to be enforced,
+                                 /// but I don't want to make this entire class an interface...
 
     public function __construct($table)
     {
         $this->table = $table;
-        $this->dbConnect();
+        $this->dbConnect(); /// sure? Does every model method need a database connection?
     }
 
     // make database connection
