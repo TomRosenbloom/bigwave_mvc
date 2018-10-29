@@ -15,13 +15,94 @@ abstract class BaseModel
     protected $config;
     protected $table;
 
-    protected $validation_rules; /// I want setting of validation rules to be enforced,
-                                 /// but I don't want to make this entire class an interface...
+    protected $validation_rules = array(); /// I want setting of validation rules to be enforced,
+                                           /// but I don't want to make this entire class an interface...
+    protected $validation_errors = array();
 
     public function __construct($table)
     {
         $this->table = $table;
         $this->dbConnect(); /// sure? Does every model method need a database connection?
+    }
+
+    /**
+     * validate post data by comparing against validation rules for object
+     *
+     * @param  array   $post_data [description]
+     * @return boolean            [description]
+     */
+    public function isValid(array $post_data)
+    {
+        foreach($post_data as $name => $value){
+            if(isset($this->validation_rules[$name])){
+                echo $name, "<br>", "<pre>"; var_dump($this->validateProperty($name, $value)); echo "</pre>";
+                //echo $this->validateProperty($name, $value);
+                // echo $name, "<br>", "<pre>"; var_dump($this->validation_rules[$name]); echo "</pre>";
+                $this->validation_errors[$name] = $this->validateProperty($name, $value);
+            }
+        }
+        if(count($this->validation_errors) === 0){
+            return true;
+        }
+    }
+
+    /**
+     * validate an object property
+     * returns array of errors
+     *
+     * @param  string $name  name of the property
+     * @param  [type] $value value to be validated
+     * @return array an array of errors - empty if none found
+     */
+    public function validateProperty(string $name, $value)
+    {
+        $rules = $this->validation_rules[$name];
+        switch($rules['type']){
+            case 'string':
+                return $this->validateString(filter_var($value, FILTER_SANITIZE_STRING));
+            case('email'):
+                return $this->validateEmail(filter_var($value, FILTER_SANITIZE_EMAIL));
+            default:
+                return array();
+        }
+    }
+
+    /**
+     * validate a string
+     * [less than max length]
+     *
+     * @param  string $string
+     * @param  [type] $max_length [description]
+     * @return array             an array of errors - empty if none found
+     */
+    public function validateString(string $string, int $max_length = null)
+    {
+        $errors = [];
+        if(empty($string)){
+            $errors[] = "No value";
+        }
+        if(!is_string($string)){
+            $errors[] = "Not a string";
+        }
+        return $errors;
+    }
+
+    /**
+     * validate email
+     *
+     * @param  string $email
+     * @return array        an array of errors - empty if none found
+     */
+    public function validateEmail(string $email)
+    {
+        $errors = [];
+        if(empty($email)){
+            $errors[] = "No value";
+        }
+        if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $errors[] = "Not a valid email";
+        }
+        return $errors;
     }
 
     // make database connection

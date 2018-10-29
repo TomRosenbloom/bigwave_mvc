@@ -3,22 +3,12 @@
 abstract class BaseController
 {
 
-    private $model;
+    protected $model;
 
     protected function model($modelName)
     {
         $this->model = new $modelName;
         return $this->model;
-    }
-
-    protected function getValidationRules()
-    {
-        return $this->model->validation_rules;
-    }
-
-    protected function isValid($post_data){
-        $rules = $this->getValidationRules();
-        return filter_input_array(INPUT_POST, $rules);
     }
 
     /**

@@ -3,12 +3,17 @@
 class UserController extends BaseController
 {
 
+    public function __construct()
+    {
+        $this->model('User');
+    }
+
     public function register()
     {
         if($this->getRequest()->getMethod() === 'POST') {
             $post_data = $this->getRequest()->getPostVars();
 
-echo $this->isValid($post_data);
+echo $this->model->isValid($post_data);
 
             $name = trim($post_data['name']);
             $email = trim($post_data['email']);
