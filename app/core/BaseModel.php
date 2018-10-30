@@ -113,7 +113,7 @@ abstract class BaseModel
      * @param  integer $min_length minimum length, default 6
      * @return array             an array of errors - empty if none found
      */
-    public function validatePassword(string $string, int $min_length = 6)
+    public function validatePassword(string $string, int $min_length = 8)
     {
         $errors = [];
         if(empty($string)){
@@ -122,7 +122,7 @@ abstract class BaseModel
         if(!is_string($string)){
             $errors[] = "Not a string";
         }
-        if(isset($min_length) && strlen($string <= $min_length)){
+        if(isset($min_length) && strlen($string) < $min_length){
             $errors[] = "Must be at least " . $min_length . " characters";
         }
         return $errors;

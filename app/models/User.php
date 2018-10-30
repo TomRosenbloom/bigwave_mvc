@@ -29,4 +29,9 @@ class User extends BaseModel
         );
     }
 
+    public function validatePassword(string $string, int $min_length = 6)
+    {
+        return parent::validatePassword($string, 6);
+    }
+
 }
