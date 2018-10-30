@@ -20,10 +20,10 @@
                         <span class="invalid-feedback"><?= $data['email_err']; ?></span>
                     </div>
                     <div class="form-group">
-                        <label for="pwd">Password: <sup>*</sup></label>
-                        <input type="password" name="pwd"
+                        <label for="password">Password: <sup>*</sup></label>
+                        <input type="password" name="password"
                         class="form-control form-control-lg <?php echo (!empty($data['pwd_err'])) ? 'is-invalid' : ''; ?>"
-                        value="<?= $data['pwd']; ?>">
+                        value="<?= $data['password']; ?>">
                         <span class="invalid-feedback"><?= $data['pwd_err']; ?></span>
                     </div>
                     <div class="form-group">

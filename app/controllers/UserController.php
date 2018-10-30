@@ -13,17 +13,27 @@ class UserController extends BaseController
         if($this->getRequest()->getMethod() === 'POST') {
             $post_data = $this->getRequest()->getPostVars();
 
-echo $this->model->isValid($post_data);
+            if($this->isValid($post_data)){
+                $name = trim($post_data['name']);
+                $email = trim($post_data['email']);
+                $password = trim($post_data['password']);
+                $conf_pwd = trim($post_data['conf_pwd']);
+            } else {
+                $post_errors = $this->getValidationErrors();
+                var_dump($post_errors);
+                $data['name_err'] = $post_errors['name'];
+                $data['email_err'] = $post_errors['email'];
+                $data['pwd_err'] = $post_errors['password'];
+                // $data['conf_pwd_err'] = $post_errors['conf_pwd'];
+            }
 
-            $name = trim($post_data['name']);
-            $email = trim($post_data['email']);
-            $password = trim($post_data['pwd']);
-            $conf_pwd = trim($post_data['conf_pwd']);
+
         } else {
+
             $data = [
                 'name' => '',
                 'email' => '',
-                'pwd' => '',
+                'password' => '',
                 'conf_pwd' => '',
                 'name_err' => '',
                 'email_err' => '',

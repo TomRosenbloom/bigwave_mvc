@@ -15,35 +15,48 @@ abstract class BaseModel
     protected $config;
     protected $table;
 
-    protected $validation_rules = array(); /// I want setting of validation rules to be enforced,
-                                           /// but I don't want to make this entire class an interface...
+    protected $validation_rules = array(); //// I want setting of validation rules to be enforced,
+                                           //// but I don't want to make this entire class an interface...
     protected $validation_errors = array();
 
     public function __construct($table)
     {
         $this->table = $table;
-        $this->dbConnect(); /// sure? Does every model method need a database connection?
+        $this->dbConnect(); //// sure? Does every model method need a database connection?
     }
 
     /**
-     * validate post data by comparing against validation rules for object
+     * validate incoming data for adding/updating an object by comparing against validation rules for object
+     * returns boolean, to get any errors use getValidationErrors
      *
-     * @param  array   $post_data [description]
+     * @param  array   $data incoming data, most likely POST data
      * @return boolean            [description]
      */
-    public function isValid(array $post_data)
+    public function isValid(array $data)
     {
-        foreach($post_data as $name => $value){
+        foreach($data as $name => $value){
             if(isset($this->validation_rules[$name])){
-                echo $name, "<br>", "<pre>"; var_dump($this->validateProperty($name, $value)); echo "</pre>";
-                //echo $this->validateProperty($name, $value);
-                // echo $name, "<br>", "<pre>"; var_dump($this->validation_rules[$name]); echo "</pre>";
                 $this->validation_errors[$name] = $this->validateProperty($name, $value);
             }
         }
         if(count($this->validation_errors) === 0){
             return true;
+            //// so this returns true/false
+            //// to get any errors, I just need a getter for validation_errors
+            //// NB if there are no validation rules set, then validation will
+            //// pass - fair enough I suppose?
         }
+    }
+
+
+    /**
+     * return array of validation errors
+     *
+     * @return array validation errors
+     */
+    public function getValidationErrors()
+    {
+        return $this->validation_errors;
     }
 
     /**
@@ -57,11 +70,13 @@ abstract class BaseModel
     public function validateProperty(string $name, $value)
     {
         $rules = $this->validation_rules[$name];
-        switch($rules['type']){
+        switch($rules['type']){ //NB currently this is arbitrary - I can use any old key name in the model's validation rules
             case 'string':
                 return $this->validateString(filter_var($value, FILTER_SANITIZE_STRING));
             case('email'):
                 return $this->validateEmail(filter_var($value, FILTER_SANITIZE_EMAIL));
+            case('password'):
+                return $this->validatePassword(filter_var($value, FILTER_SANITIZE_STRING));
             default:
                 return array();
         }
@@ -83,6 +98,32 @@ abstract class BaseModel
         }
         if(!is_string($string)){
             $errors[] = "Not a string";
+        }
+        return $errors;
+    }
+
+    /**
+     * validate a password
+     * [ >= min length]
+     * [including/excluding certain chars]
+     * so this is in the base model class, but different applications may want different
+     * password lengths, so in that case I would extend this method, right?
+     *
+     * @param  string $string
+     * @param  integer $min_length minimum length, default 6
+     * @return array             an array of errors - empty if none found
+     */
+    public function validatePassword(string $string, int $min_length = 6)
+    {
+        $errors = [];
+        if(empty($string)){
+            $errors[] = "No value";
+        }
+        if(!is_string($string)){
+            $errors[] = "Not a string";
+        }
+        if(isset($min_length) && strlen($string <= $min_length)){
+            $errors[] = "Must be at least " . $min_length . " characters";
         }
         return $errors;
     }
