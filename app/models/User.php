@@ -41,10 +41,22 @@ class User extends BaseModel
         return parent::validatePassword($string, 6);
     }
 
-
-    public function validateTest(string $string, int $min_length = 6, int $max_length = 20)
+    public function validateConfPassword()
     {
-        echo $string, $min_length, $max_length, "<br>";
+        //
+    }
+
+    /**
+     * validate a user name (this is just for test of principle - it doesn't do anything that
+     * validateString doesn't already do)
+     *
+     * @param  string  $string     [description]
+     * @param  integer $min_length [description]
+     * @param  integer $max_length [description]
+     * @return  array             an array of errors - empty if none found
+     */
+    public function validateName(string $string, int $min_length = 6, int $max_length = 20)
+    {
         return parent::validateString($string, $min_length, $max_length);
     }
 

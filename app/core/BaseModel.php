@@ -28,26 +28,24 @@ abstract class BaseModel
     /**
      * validate incoming data for adding/updating an object by comparing against validation rules for object
      * returns boolean, to get any errors use getValidationErrors
+     * NB if there are NO validation rules set, validation will pass
      *
      * @param  array   $data incoming data, most likely POST data
      * @return boolean            [description]
      */
     public function isValid(array $data)
     {
-
-        $this->validation_errors['test'] = $this->validatePropertyDynamic('test', 'Test Name', array(6,8));
+        //// for test
+        //$this->validation_errors['test'] = $this->validatePropertyDynamic('test', 'Test Name', array(6,8));
 
         foreach($data as $name => $value){
             if(isset($this->validation_rules[$name])){
-                $this->validation_errors[$name] = $this->validateProperty($name, $value);
+                //$this->validation_errors[$name] = $this->validateProperty($name, $value);
+                $this->validation_errors[$name] = $this->validatePropertySemiDynamic($name, $value);
             }
         }
         if(count($this->validation_errors) === 0){
             return true;
-            //// so this returns true/false
-            //// to get any errors, I just need a getter for validation_errors
-            //// NB if there are no validation rules set, then validation will
-            //// pass - fair enough I suppose?
         }
     }
 
@@ -76,9 +74,9 @@ abstract class BaseModel
         switch($rules['type']){ //NB currently this is arbitrary - I can use any old key name in the model's validation rules
             case 'string':
                 return $this->validateString(filter_var($value, FILTER_SANITIZE_STRING));
-            case('email'):
+            case 'email':
                 return $this->validateEmail(filter_var($value, FILTER_SANITIZE_EMAIL));
-            case('password'):
+            case 'password':
                 return $this->validatePassword(filter_var($value, FILTER_SANITIZE_STRING));
             default:
                 return array();
@@ -86,12 +84,32 @@ abstract class BaseModel
     }
 
 
+    /**
+     * Validate a property using a method defined in the extending model class,
+     * The property will always have a name and a value, an indeterminate number of
+     * other params. We can handle this in a Pythonesque way using splat operator
+     *
+     * This method will construct a method name 'validateName' where Name is name of given property
+     * and call it with given value and optional args.
+     *
+     * @param  string $name  [description]
+     * @param  [type] $value [description]
+     * @param  [type] $args  [description]
+     * @return [type]        [description]
+     */
     public function validatePropertyDynamic(string $name, $value, $args)
     {
         $validationMethodName = "validate" . ucwords($name);
-        echo "<pre>"; var_dump($args); echo "</pre>";
         if(method_exists($this, $validationMethodName)){
             return $this->$validationMethodName($value, ...$args);
+        }
+    }
+
+    public function validatePropertySemiDynamic(string $name, $value)
+    {
+        $validationMethodName = "validate" . ucwords($name);
+        if(method_exists($this, $validationMethodName)){
+            return $this->$validationMethodName($value);
         }
     }
 
@@ -105,18 +123,18 @@ abstract class BaseModel
      */
     public function validateString(string $string, int $min_length = null, int $max_length = null)
     {
-        $errors = []; echo "<p>$string $min_length $max_length</p>";
+        $errors = [];
         if(empty($string)){
-            $errors[] = "No value";
+            $errors[] = "Please enter a value";
         }
         if(!is_string($string)){
             $errors[] = "Not a string";
         }
         if(isset($min_length) && strlen($string) < $min_length){
-            $errors[] = "Must be at least " . $min_length . " characters";
+            $errors[] = "Must be at least " . $min_length . " characters long";
         }
         if(isset($max_length) && strlen($string) > $max_length){
-            $errors[] = "Must be no more than " . $max_length . " characters";
+            $errors[] = "Must be no more than " . $max_length . " characters long";
         }
         return $errors;
     }
@@ -136,13 +154,13 @@ abstract class BaseModel
     {
         $errors = [];
         if(empty($string)){
-            $errors[] = "No value";
+            $errors[] = "Please enter a password";
         }
         if(!is_string($string)){
-            $errors[] = "Not a string";
+            $errors[] = "Password must be a string"; // how could it ever not be?
         }
         if(isset($min_length) && strlen($string) < $min_length){
-            $errors[] = "Must be at least " . $min_length . " characters";
+            $errors[] = "Password must be at least " . $min_length . " characters";
         }
         return $errors;
     }
@@ -157,7 +175,7 @@ abstract class BaseModel
     {
         $errors = [];
         if(empty($email)){
-            $errors[] = "No value";
+            $errors[] = "Please enter an email address";
         }
         if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $errors[] = "Not a valid email";

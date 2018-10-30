@@ -19,12 +19,17 @@ class UserController extends BaseController
                 $password = trim($post_data['password']);
                 // $conf_pwd = trim($post_data['conf_pwd']);
             } else {
-                $post_errors = $this->getValidationErrors();
-                var_dump($post_errors);
+                $post_errors = $this->getValidationErrors(); // array of arrays
+
+                $data['name'] = $post_data['name'];
+                $data['email'] = $post_data['email'];
+                $data['password'] = $post_data['password'];
                 $data['name_err'] = $post_errors['name'];
                 $data['email_err'] = $post_errors['email'];
                 $data['pwd_err'] = $post_errors['password'];
                 // $data['conf_pwd_err'] = $post_errors['conf_pwd'];
+                
+                $this->view('user/register', $data);
             }
 
 

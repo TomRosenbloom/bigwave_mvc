@@ -10,21 +10,39 @@
                         <input type="text" name="name"
                         class="form-control form-control-lg <?php echo (!empty($data['name_err'])) ? 'is-invalid' : ''; ?>"
                         value="<?= $data['name']; ?>">
-                        <span class="invalid-feedback"><?= $data['name_err']; ?></span>
+                        <span class="invalid-feedback">
+                            <?php
+                            foreach($data['name_err'] as $error){
+                                echo $error, "<br>";
+                            }
+                            ?>
+                        </span>
                     </div>
                     <div class="form-group">
                         <label for="email">Email: <sup>*</sup></label>
                         <input type="email" name="email"
                         class="form-control form-control-lg <?php echo (!empty($data['email_err'])) ? 'is-invalid' : ''; ?>"
                         value="<?= $data['email']; ?>">
-                        <span class="invalid-feedback"><?= $data['email_err']; ?></span>
+                        <span class="invalid-feedback">
+                            <?php
+                            foreach($data['email_err'] as $error){
+                                echo $error, "<br>";
+                            }
+                            ?>
+                        </span>
                     </div>
                     <div class="form-group">
                         <label for="password">Password: <sup>*</sup></label>
                         <input type="password" name="password"
                         class="form-control form-control-lg <?php echo (!empty($data['pwd_err'])) ? 'is-invalid' : ''; ?>"
                         value="<?= $data['password']; ?>">
-                        <span class="invalid-feedback"><?= $data['pwd_err']; ?></span>
+                        <span class="invalid-feedback">
+                            <?php
+                            foreach($data['pwd_err'] as $error){
+                                echo $error, "<br>";
+                            }
+                            ?>
+                        </span>
                     </div>
 
                     <div class="row">
