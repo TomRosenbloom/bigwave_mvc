@@ -26,13 +26,6 @@
                         value="<?= $data['password']; ?>">
                         <span class="invalid-feedback"><?= $data['pwd_err']; ?></span>
                     </div>
-                    <div class="form-group">
-                        <label for="conf_pwd">Confirm password: <sup>*</sup></label>
-                        <input type="password" name="conf_pwd"
-                        class="form-control form-control-lg <?php echo (!empty($data['conf_pwd_err'])) ? 'is-invalid' : ''; ?>"
-                        value="<?= $data['conf_pwd']; ?>">
-                        <span class="invalid-feedback"><?= $data['conf_pwd_err']; ?></span>
-                    </div>
 
                     <div class="row">
                         <div class="col">
