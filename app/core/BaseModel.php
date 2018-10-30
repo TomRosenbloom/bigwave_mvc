@@ -34,6 +34,9 @@ abstract class BaseModel
      */
     public function isValid(array $data)
     {
+
+        $this->validation_errors['test'] = $this->validatePropertyDynamic('test', 'Test Name', array(6,8));
+
         foreach($data as $name => $value){
             if(isset($this->validation_rules[$name])){
                 $this->validation_errors[$name] = $this->validateProperty($name, $value);
@@ -82,6 +85,16 @@ abstract class BaseModel
         }
     }
 
+
+    public function validatePropertyDynamic(string $name, $value, $args)
+    {
+        $validationMethodName = "validate" . ucwords($name);
+        echo "<pre>"; var_dump($args); echo "</pre>";
+        if(method_exists($this, $validationMethodName)){
+            return $this->$validationMethodName($value, ...$args);
+        }
+    }
+
     /**
      * validate a string
      * [less than max length]
@@ -90,14 +103,20 @@ abstract class BaseModel
      * @param  [type] $max_length [description]
      * @return array             an array of errors - empty if none found
      */
-    public function validateString(string $string, int $max_length = null)
+    public function validateString(string $string, int $min_length = null, int $max_length = null)
     {
-        $errors = [];
+        $errors = []; echo "<p>$string $min_length $max_length</p>";
         if(empty($string)){
             $errors[] = "No value";
         }
         if(!is_string($string)){
             $errors[] = "Not a string";
+        }
+        if(isset($min_length) && strlen($string) < $min_length){
+            $errors[] = "Must be at least " . $min_length . " characters";
+        }
+        if(isset($max_length) && strlen($string) > $max_length){
+            $errors[] = "Must be no more than " . $max_length . " characters";
         }
         return $errors;
     }

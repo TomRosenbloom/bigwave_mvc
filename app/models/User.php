@@ -29,9 +29,25 @@ class User extends BaseModel
         );
     }
 
+    /**
+     * override parent/default password validation to set model-specific minimum length
+     *
+     * @param  string  $string     [description]
+     * @param  integer $min_length [description]
+     * @return [type]              [description]
+     */
     public function validatePassword(string $string, int $min_length = 6)
     {
         return parent::validatePassword($string, 6);
     }
+
+
+    public function validateTest(string $string, int $min_length = 6, int $max_length = 20)
+    {
+        echo $string, $min_length, $max_length, "<br>";
+        return parent::validateString($string, $min_length, $max_length);
+    }
+
+
 
 }
