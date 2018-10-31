@@ -44,6 +44,19 @@
                             ?>
                         </span>
                     </div>
+                    <div class="form-group">
+                        <label for="conf_pwd">Confirm password: <sup>*</sup></label>
+                        <input type="password" name="conf_pwd"
+                        class="form-control form-control-lg <?php echo (!empty($data['conf_pwd_err'])) ? 'is-invalid' : ''; ?>"
+                        value="<?= $data['conf_pwd']; ?>">
+                        <span class="invalid-feedback">
+                            <?php
+                            foreach($data['conf_pwd_err'] as $error){
+                                echo $error, "<br>";
+                            }
+                            ?>
+                        </span>
+                    </div>
 
                     <div class="row">
                         <div class="col">

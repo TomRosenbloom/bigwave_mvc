@@ -17,18 +17,20 @@ class UserController extends BaseController
                 $name = trim($post_data['name']);
                 $email = trim($post_data['email']);
                 $password = trim($post_data['password']);
-                // $conf_pwd = trim($post_data['conf_pwd']);
+                $conf_pwd = trim($post_data['conf_pwd']);
             } else {
                 $post_errors = $this->getValidationErrors(); // array of arrays
 
                 $data['name'] = $post_data['name'];
                 $data['email'] = $post_data['email'];
                 $data['password'] = $post_data['password'];
+                $data['conf_pwd'] = $post_data['conf_pwd'];
+
                 $data['name_err'] = $post_errors['name'];
                 $data['email_err'] = $post_errors['email'];
                 $data['pwd_err'] = $post_errors['password'];
-                // $data['conf_pwd_err'] = $post_errors['conf_pwd'];
-                
+                $data['conf_pwd_err'] = $post_errors['conf_pwd'];
+
                 $this->view('user/register', $data);
             }
 
@@ -39,7 +41,7 @@ class UserController extends BaseController
                 'name' => '',
                 'email' => '',
                 'password' => '',
-                // 'conf_pwd' => '',
+                'conf_pwd' => '',
                 'name_err' => '',
                 'email_err' => '',
                 'pwd_err' => '',
