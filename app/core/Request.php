@@ -39,7 +39,7 @@ class Request
     public function getPostVars()
     {
         if($this->_method === 'POST'){
-            return $_POST;
+            return filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
         } else {
             return 0;
         }

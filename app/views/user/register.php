@@ -11,11 +11,7 @@
                         class="form-control form-control-lg <?php echo (!empty($data['name_err'])) ? 'is-invalid' : ''; ?>"
                         value="<?= $data['name']; ?>">
                         <span class="invalid-feedback">
-                            <?php
-                            foreach($data['name_err'] as $error){
-                                echo $error, "<br>";
-                            }
-                            ?>
+                            <?= $data['name_err'] ?>
                         </span>
                     </div>
                     <div class="form-group">
@@ -24,11 +20,7 @@
                         class="form-control form-control-lg <?php echo (!empty($data['email_err'])) ? 'is-invalid' : ''; ?>"
                         value="<?= $data['email']; ?>">
                         <span class="invalid-feedback">
-                            <?php
-                            foreach($data['email_err'] as $error){
-                                echo $error, "<br>";
-                            }
-                            ?>
+                            <?= $data['email_err'] ?>
                         </span>
                     </div>
                     <div class="form-group">
@@ -37,11 +29,7 @@
                         class="form-control form-control-lg <?php echo (!empty($data['pwd_err'])) ? 'is-invalid' : ''; ?>"
                         value="<?= $data['password']; ?>">
                         <span class="invalid-feedback">
-                            <?php
-                            foreach($data['pwd_err'] as $error){
-                                echo $error, "<br>";
-                            }
-                            ?>
+                            <?= $data['pwd_err'] ?>
                         </span>
                     </div>
                     <div class="form-group">
@@ -50,11 +38,7 @@
                         class="form-control form-control-lg <?php echo (!empty($data['conf_pwd_err'])) ? 'is-invalid' : ''; ?>"
                         value="<?= $data['conf_pwd']; ?>">
                         <span class="invalid-feedback">
-                            <?php
-                            foreach($data['conf_pwd_err'] as $error){
-                                echo $error, "<br>";
-                            }
-                            ?>
+                            <?= $data['conf_pwd_err'] ?>
                         </span>
                     </div>
 
