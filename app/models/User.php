@@ -37,12 +37,12 @@ class User extends BaseModel
 
         $sql = "INSERT INTO users (name, email, password) VALUES (?,?,?)";
         $stmt = $this->connection->prepare($sql);
-
-        if($stmt->execute([$data['name'], $data['email'], $data['password']])){
-            return true;
-        } else {
-            return false;
-        }
+return true;
+        // if($stmt->execute([$data['name'], $data['email'], $data['password']])){
+        //     return true;
+        // } else {
+        //     return false;
+        // }
     }
 
 }

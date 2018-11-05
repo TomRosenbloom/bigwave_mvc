@@ -6,6 +6,6 @@ class HomeController extends BaseController
     {
         $title = 'DIY MVC';
         $description = 'A homemade MVC framework';
-        $this->view('home/index', compact('title', 'description')); 
+        $this->view('home/index', compact('title', 'description'));
     }
 }
