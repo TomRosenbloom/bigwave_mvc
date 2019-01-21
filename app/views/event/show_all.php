@@ -8,12 +8,12 @@
         <style media="screen">
             /* make list scrollable */
             #listItems {
-                height: 600px
+                height: 600px;
                 overflow: scroll;
                 padding: 10px;
                 border: solid grey 1px;
                 border-radius: 2px;
-                box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px; // copied from google maps callout
+                box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px; /* copied from google maps callout */
             }
         </style>
 

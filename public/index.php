@@ -8,6 +8,7 @@
 // always connects to db, since some models might not need db connection. If
 // we extend a base model class that has db connection that we don't use, that violates
 // one of the SOLID principles, forget which one now)
+// - Liskov Substitution
 
 require __DIR__.'\..\vendor\autoload.php';
 
