@@ -24,9 +24,7 @@ class SessionHelper
     
     public function flash($name = '', $message = '', $class = 'alert alert-success')
     {
-        session_start();
-        echo $name, $message, $class;
-        var_dump($_SESSION);
+        session_start(); // not here!!
         
         if(!empty($name)){
             if(!empty($message) && empty($_SESSION[$name])){
