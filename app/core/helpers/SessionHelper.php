@@ -21,11 +21,8 @@ class SessionHelper
      * @param string $message The content of the message
      * @param string $class (optional) class to display the message
      */
-    
     public function flash($name = '', $message = '', $class = 'alert alert-success')
     {
-        session_start(); // not here!!
-        
         if(!empty($name)){
             if(!empty($message) && empty($_SESSION[$name])){
                 

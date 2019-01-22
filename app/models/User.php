@@ -45,6 +45,14 @@ class User extends BaseModel
         }
     }
 
+    /**
+     * 
+     * logs in user and returns user details - as array
+     * 
+     * @param type $email
+     * @param type $password
+     * @return boolean or array
+     */
     public function login($email, $password)
     {
         $results = $this->getAllWhere(array(array('name'=>'email', 'value'=>$email, 'comparison'=>' = ')));
@@ -55,8 +63,7 @@ class User extends BaseModel
                 return $row;
             } else {
                 return false;
-            }
-            
+            }          
         }
         if(count($results) === 0){
             return false;

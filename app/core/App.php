@@ -9,6 +9,8 @@ class App
 
     public function __construct()
     {
+        session_start(); // session always on
+        
         $this->url_parts = $this->parseUrl();
         $this->setController($this->url_parts);
         $this->setMethod($this->url_parts);

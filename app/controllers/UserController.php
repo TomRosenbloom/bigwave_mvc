@@ -118,7 +118,7 @@ class UserController extends BaseController
             if(empty($data['email_err']) && empty($data['pwd_err'])){
                 $loggedInUser = $this->model->login($data['email'], $data['password']); // attempt login
                 if($loggedInUser){
-                    die('success');
+                    $this->createUserSession($loggedInUser);
                 } else {
                     $data['pwd_err'] = 'Password incorrect';
                     $this->view('user/login', $data);
@@ -137,5 +137,31 @@ class UserController extends BaseController
             $this->view('user/login', $data);
         }
 
+    }
+    
+    public function createUserSession($user)
+    {
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['user_email'] = $user['email'];
+        $_SESSION['user_name'] = $user['name'];
+        UrlHelper::redirect('home/index');
+    }
+    
+    public function logout()
+    {
+        unset($_SESSION['user_id']);
+        unset($_SESSION['user_email']);
+        unset($_SESSION['user_name']);
+        UrlHelper::redirect('home/index');        
+    }
+    
+    public function isLoggedIn()
+    {
+        if(isset($_SESSION['user_id'])){
+            return true;
+        } else {
+            return false;
+        }
+        
     }
 }

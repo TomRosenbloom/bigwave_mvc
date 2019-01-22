@@ -19,12 +19,18 @@
     </ul>
 
     <ul class="navbar-nav ml-auto">
-      <li class="nav-item">
-        <a class="nav-link" href="<?= URL_ROOT; ?>/user/register">Register</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="<?= URL_ROOT; ?>/user/login">Login</a>
-      </li>
+        <?php if(isset($_SESSION['user_id'])){ ?>
+            <li class="nav-item">
+                <a class="nav-link" href="<?= URL_ROOT; ?>/user/logout">Logout</a>
+            </li>
+        <?php } else { ?>
+            <li class="nav-item">
+                <a class="nav-link" href="<?= URL_ROOT; ?>/user/register">Register</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="<?= URL_ROOT; ?>/user/login">Login</a>
+            </li>
+        <?php } ?>
     </ul>
 
   </div>
