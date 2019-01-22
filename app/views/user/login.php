@@ -1,8 +1,9 @@
 <?php require APP_ROOT . '/views/inc/header.php'; ?>
-
+<?php use App\SessionHelper; ?>
     <div class="row">
         <div class="col-md-6 mx-auto">
             <div class="card card-body bg-light mt-5">
+                <?php SessionHelper::flash('register_success'); ?>
                 <h2>Login</h2>
                 <form class="" action="<?= URL_ROOT; ?>/user/login" method="post">
                     <div class="form-group">

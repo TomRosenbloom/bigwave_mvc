@@ -4,6 +4,7 @@ namespace App;
 
 class SessionHelper
 {
+        
     /**
      * handle flash message
      * 
@@ -20,8 +21,13 @@ class SessionHelper
      * @param string $message The content of the message
      * @param string $class (optional) class to display the message
      */
+    
     public function flash($name = '', $message = '', $class = 'alert alert-success')
     {
+        session_start();
+        echo $name, $message, $class;
+        var_dump($_SESSION);
+        
         if(!empty($name)){
             if(!empty($message) && empty($_SESSION[$name])){
                 
@@ -32,7 +38,7 @@ class SessionHelper
                     unset($_SESSION[$name . '_class']);
                 }
                 
-                $_SESSION[$name] = $name;
+                $_SESSION[$name] = $message;
                 $_SESSION[$name . '_class'] = $class;
             } elseif(empty($message) && !empty($_SESSION[$name])){
                 $class = !empty($_SESSION[$name . '_class']) ? $_SESSION[$name . '_class'] : '';

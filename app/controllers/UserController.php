@@ -1,6 +1,7 @@
 <?php
 
 use App\UrlHelper;
+use App\SessionHelper;
 
 class UserController extends BaseController
 {
@@ -51,12 +52,14 @@ class UserController extends BaseController
                 $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 
                 if($this->model->register($data)){
+                    SessionHelper::flash('register_success','registered');
                     UrlHelper::redirect('user/login'); // how can I access redirect directly?
                                                        // well, however you slice it, you can't because the function
                                                        // only exists when the UrlHelper class has been instantiated
                                                        // Well... not actually instantiated as we are accessing the class
                                                        // method statically, but the function/method can't exist independently
                                                        // Why doesn't PHP complain that redirect isn't declared as static?
+                
                 } else {
                     die('error');
                 }
