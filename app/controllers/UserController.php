@@ -99,7 +99,7 @@ class UserController extends BaseController
                 'pwd_err' => '',
             ];
 
-            // validation
+            // validate email and password
             if(empty($post_data['email'])){
                 $data['email_err'] = 'Please enter email';
             }
@@ -107,10 +107,24 @@ class UserController extends BaseController
                 $data['pwd_err'] = 'Please enter a password';
             }
 
+            // check existing user
+            if(!$this->model->confirmUserByEmail($data['email'])){
+                $data['email_err'] = 'Email not registered';
+            }
+            
+            // attempt to login the user with validated credentials
+            // There's something about this Traversy logic that I don't like
+            // too many conditionals I think...
             if(empty($data['email_err']) && empty($data['pwd_err'])){
-                die('success');
+                $loggedInUser = $this->model->login($data['email'], $data['password']); // attempt login
+                if($loggedInUser){
+                    die('success');
+                } else {
+                    $data['pwd_err'] = 'Password incorrect';
+                    $this->view('user/login', $data);
+                }
             } else {
-                $this->view('user/register', $data);
+                $this->view('user/login', $data); // re-display the form
             }
 
         } else {

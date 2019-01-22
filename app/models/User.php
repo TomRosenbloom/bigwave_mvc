@@ -45,4 +45,24 @@ class User extends BaseModel
         }
     }
 
+    public function login($email, $password)
+    {
+        $results = $this->getAllWhere(array(array('name'=>'email', 'value'=>$email, 'comparison'=>' = ')));
+        if(count($results) === 1){
+            $row = $results[0];
+            $hashed_pwd = $row['password'];
+            if(password_verify($password, $hashed_pwd)){
+                return $row;
+            } else {
+                return false;
+            }
+            
+        }
+        if(count($results) === 0){
+            return false;
+        }
+        if(count($results > 1)){
+            return -1;
+        }       
+    }
 }
