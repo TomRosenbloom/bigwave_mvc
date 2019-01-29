@@ -24,6 +24,18 @@ class Config
         define('APP_ROOT', dirname(dirname(__FILE__)));
         define('URL_ROOT', "http://localhost.bigwavemvc");
         define('SITE_NAME', "DIY MVC");
+        define('JSON_URL', 'http://api.letsride.co.uk/public/v1/rides/');
+        
+        // the let's ride API seems broken and out of date so here's a different one to try
+        // but it seems like the structure is different as this breaks...
+        // How far and why is it different?
+        // description is at a higher level - fine
+        // there is no startDate - rather there is, but it is under subEvent, because I guess these are 'sessions'
+        // what I really need is to have different parameters etc. for different feeds - that sounds fun!!
+        
+        // opportunity to use some composition - Strategy pattern maybe
+        
+        //define('JSON_URL', 'http://activenewham-openactive.herokuapp.com/');
 
         $this->config = parse_ini_file(APP_ROOT . '\config\config.ini');
 
