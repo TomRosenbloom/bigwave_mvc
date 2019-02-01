@@ -3,7 +3,8 @@
     <h1>Admin</h1>
 
     <ul>
-        <li><a href="<?= URL_ROOT; ?>/feed/refresh">Refresh db from feed</a></li>
+        <li><a href="<?= URL_ROOT; ?>/feed/refresh">Refresh the db from the LetsRide feed</a></li>
+        <li><a href="<?= URL_ROOT; ?>/feed/refresh">Refresh the db from the activeNewham feed</a></li>
         <li><a href="<?= URL_ROOT; ?>/feed/readAll">Create JSON feed from local data</a></li>
         <li><a href="<?= URL_ROOT; ?>/feed/readOne/1">JSON data for one event from local data</a></li>
     </ul>

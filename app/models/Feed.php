@@ -17,7 +17,13 @@ namespace App;
  * 
  */
 
-abstract class Feed
+interface FeedInterface
+{
+    public function refresh();
+}
+
+
+abstract class Feed implements FeedInterface
 {  
     protected $jsonUrl;
     protected $connection;

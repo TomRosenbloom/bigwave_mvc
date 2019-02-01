@@ -11,13 +11,13 @@ class LetsRideFeed extends Feed
 
         $this->connection->query('TRUNCATE TABLE events')->execute(); // danger
 
-        echo "<pre>"; var_dump($data); echo "</pre>";
+        //echo "<pre>"; var_dump($data); echo "</pre>";
         
         foreach($data->items as $item) {
 
             $name = $item->data->name;
-            //$description = iconv('UTF-8', 'ASCII//TRANSLIT', $item->data->programme->description); // need a general functiom to sanitise inputs
-            $description = iconv('UTF-8', 'ASCII//TRANSLIT', $item->data->description); 
+            $description = iconv('UTF-8', 'ASCII//TRANSLIT', $item->data->programme->description); // need a general functiom to sanitise inputs
+            //$description = iconv('UTF-8', 'ASCII//TRANSLIT', $item->data->description); 
             
             $date = $item->data->startDate;
             // nb there's a lot of location data, and not predicatable which is completed, if any
