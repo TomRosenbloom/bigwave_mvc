@@ -34,12 +34,18 @@ abstract class BaseModel
         }
     }
 
+    
+    // should make the PDO fetch method an option?
+    // 
+    // should make these methods static, to avoid always having to instantiate object?
+    // but that messes up existing usage...
+    
     public function getOneFromId($id)
     {
         try{
             $stmt = $this->connection->prepare('SELECT * FROM ' . $this->table . ' WHERE id = ?');
             $stmt->execute([$id]);
-            $data = $stmt->fetch(PDO::FETCH_ASSOC);
+            $data = $stmt->fetch(PDO::FETCH_ASSOC); 
         } catch(PDOException $e){
             echo 'ERROR: ' . $e->getMessage();
         }

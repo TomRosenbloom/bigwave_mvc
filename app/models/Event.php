@@ -1,5 +1,7 @@
 <?php
 
+namespace App;
+
 class Event extends BaseModel
 {
     public function __construct()

@@ -4,6 +4,13 @@ namespace App;
 
 class LetsRideFeed extends Feed
 {
+    
+    public function __construct()
+    {
+        $this->jsonUrl = JSON_URL;
+        parent::__construct($this->jsonUrl);
+    }    
+    
     function refresh()
     {
         $json = file_get_contents($this->jsonUrl);

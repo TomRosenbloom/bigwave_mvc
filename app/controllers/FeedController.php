@@ -11,20 +11,6 @@ use App\LetsRideFeed;
 class FeedController extends BaseController
 {
 
-    protected $connection;
-    protected $jsonUrl;
-
-    public function __construct()
-    {
-        $db = Database::getInstance();
-        try {
-            $this->connection = $db->getConnection();
-        } catch(PDOException $e) {
-            echo $e->getMessage();
-        }
-        $this->jsonUrl = JSON_URL;
-    }
-
     /**
      * get all event data from db and dump as json
      *
@@ -32,7 +18,8 @@ class FeedController extends BaseController
      */
     public function readAll()
     {
-        $data = $this->connection->query('SELECT * FROM events')->fetchAll();
+        $event = new Event();
+        $data = $event->getAll();
         var_dump(json_encode($data));
     }
 
@@ -41,21 +28,10 @@ class FeedController extends BaseController
      *
      * @return [type] [description]
      */
-    public function readOne()
-    {
-        $id = 1;
-        try{
-            // $data = $this->connection
-            //     ->prepare('SELECT * FROM events WHERE id = ?')
-            //     ->execute([$id])
-            //     ->fetch();
-
-            $stmt = $this->connection->prepare('SELECT * FROM events WHERE id = ?');
-            $stmt->execute([$id]);
-            $data = $stmt->fetch();
-        } catch(PDOException $e){
-            echo 'ERROR: ' . $e->getMessage();
-        }
+    public function readOne($id = '')
+    {        
+        $event = new Event();
+        $data = $event->getOneFromId($id);
         $json = json_encode($data);
         $this->view('feed/readOne', ['json'=>$json]);
     }
@@ -66,13 +42,11 @@ class FeedController extends BaseController
      * That's ok. But something else wrong with dates - mostly 2500-01-01...
      * (no future events with valid dates...)
      *
-     * More importantly, SHOULD NOT be doing all of the below in a controller!!!
-     *
      * @return [type] [description]
      */
     public function refresh()
     {
-        $feed = new LetsRideFeed($this->jsonUrl, $this->connection);
+        $feed = new LetsRideFeed();
         $feed->refresh();
                 
         $this->view('feed/refresh', []);

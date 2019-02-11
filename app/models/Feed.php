@@ -11,9 +11,9 @@ namespace App;
  * and supplying that structure to some agnostic methods for processing the feed
  * 
  * Note this model will not extend BaseModel because it is not based on a database table
- * 
- * how will I do composition when (if) it's one class per file? Is that a problem?
- * For composition I will want an abstract Feed class (or interface), plus...
+ * ...in fact I have - for now at least - extended BaseModel so as to have access to 
+ * a database connection, which I need for the refresh method
+ * Don't think this is right - but it works for now
  * 
  */
 
@@ -22,15 +22,19 @@ interface FeedInterface
     public function refresh();
 }
 
+// ok so every feed will use the same local db connection, but a different json url
+// how do I deal with these two properties?
 
-abstract class Feed implements FeedInterface
+
+abstract class Feed extends \BaseModel implements FeedInterface
 {  
     protected $jsonUrl;
-    protected $connection;
     
-    function __construct($jsonUrl, $connection) {
+    function __construct($jsonUrl) {
+        
         $this->jsonUrl = $jsonUrl;
-        $this->connection = $connection;
+        parent::__construct(''); // this is obviously wrong - because I'm extending BaseModel (for now) I have to supply this blank table name
+      
     }
     
 
