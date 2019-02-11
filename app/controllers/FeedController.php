@@ -1,6 +1,7 @@
 <?php
 
 use App\LetsRideFeed;
+use App\Event;
 
 /**
  * matters to do with reading the Lets Ride feed, AND the local API

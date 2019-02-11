@@ -1,6 +1,7 @@
 <?php
 
 namespace App;
+use \BaseModel;
 
 class Event extends BaseModel
 {
