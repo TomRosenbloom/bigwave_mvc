@@ -1,5 +1,7 @@
 <?php
 
+//namespace App;
+
 class App
 {
     protected $url_parts;
@@ -22,10 +24,10 @@ class App
     public function executeControllerAction()
     {
         if (!class_exists($this->controller)){
-            throw new Exception('No controller called ' . $this->controller);
+            throw new \Exception('No controller called ' . $this->controller);
         }
         if(!method_exists($this->controller, $this->method)) {
-            throw new Exception($this->controller . ' has no action ' . $this->method);
+            throw new \Exception($this->controller . ' has no action ' . $this->method);
         }
 
         $controller_callable = new $this->controller;

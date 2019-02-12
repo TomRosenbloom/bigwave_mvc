@@ -1,45 +1,31 @@
 <?php
 
-use App\LetsRideFeed;
-use App\Event;
+//use App\LetsRideFeed;
+//use App\Event;
 
 /**
  * matters to do with reading the Lets Ride feed, AND the local API
  * (they should probably be in separate controllers)
  *
- * NB should not be doing db queries in a controller...
  */
 class FeedController extends BaseController
 {
 
-    /**
-     * get all event data from db and dump as json
-     *
-     * @return [type] [description]
-     */
-    public function readAll()
-    {
-        $event = new Event();
-        $data = $event->getAll();
-        var_dump(json_encode($data));
-    }
+    protected $modelName;
 
     /**
-     * get one event from db and display as json, using a view
-     *
-     * @return [type] [description]
+     * set model identifier in constructor
      */
-    public function readOne($id = '')
-    {        
-        $event = new Event();
-        $data = $event->getOneFromId($id);
-        $json = json_encode($data);
-        $this->view('feed/readOne', ['json'=>$json]);
+    public function __construct()
+    {
+        $this->modelName = "Feed";
     }
+    
+
 
     /**
      * refresh local db from Lets Ride feed
-     * NB seems like the feed contains past events?
+     * NB seems like the Let's Ride feed contains past events?
      * That's ok. But something else wrong with dates - mostly 2500-01-01...
      * (no future events with valid dates...)
      *

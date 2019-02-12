@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+//namespace App;
 
 /*
  * so the idea here is to have a set up where I can use some composition 
@@ -26,15 +26,15 @@ interface FeedInterface
 // how do I deal with these two properties?
 
 
-abstract class Feed extends \BaseModel implements FeedInterface
+abstract class Feed extends BaseModel implements FeedInterface
 {  
+    protected $feedId;
     protected $jsonUrl;
     
-    function __construct($jsonUrl) {
-        
-        $this->jsonUrl = $jsonUrl;
-        parent::__construct(''); // this is obviously wrong - because I'm extending BaseModel (for now) I have to supply this blank table name
-      
+    function __construct() 
+    {       
+        //$this->jsonUrl = $jsonUrl;
+        parent::__construct('feeds');   
     }
     
 

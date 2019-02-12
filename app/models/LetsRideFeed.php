@@ -1,16 +1,26 @@
 <?php
 
-namespace App;
+//namespace App;
 
 class LetsRideFeed extends Feed
 {
     
     public function __construct()
     {
-        $this->jsonUrl = JSON_URL;
-        parent::__construct($this->jsonUrl);
-    }    
+        $this->feedId = 1; // this is just temporary - I need a better way of having a unique
+                           // identifier for each feed. Using the auto-increment table id is obvs bad idea
+        
+        parent::__construct();
+        $feedDetails = $this->getOneFromId($this->feedId);
+        $this->jsonUrl = $feedDetails['url'];
+    }
     
+    
+    /**
+     * refresh the local db copy of feed data
+     * 
+     * @return string
+     */
     function refresh()
     {
         $json = file_get_contents($this->jsonUrl);
@@ -38,8 +48,8 @@ class LetsRideFeed extends Feed
             $url = $item->data->url;
 
             try {
-                $sql = 'INSERT INTO events (title, description, event_date, latitude, longitude) VALUES(?,?,?,?,?)';
-                $this->connection->prepare($sql)->execute([$name, $description, $date, $lat, $long]);
+                $sql = 'INSERT INTO events (feed_id, title, description, event_date, latitude, longitude) VALUES(?,?,?,?,?,?)';
+                $this->connection->prepare($sql)->execute([$this->feedId, $name, $description, $date, $lat, $long]);
             } catch(Exception $e) {
                 echo 'ERROR: ' . $e->getMessage();
             }

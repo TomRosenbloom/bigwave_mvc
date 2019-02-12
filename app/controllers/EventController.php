@@ -1,5 +1,7 @@
 <?php
 
+//namespace App;
+
 class EventController extends BaseController
 {
 
