@@ -13,34 +13,6 @@ class BritishTriathlonFeed extends Feed
         $this->jsonUrl = $feedDetails['url'];
     }
 
-
-/**
- * Replaces any parameter placeholders in a query with the value of that
- * parameter. Useful for debugging. Assumes anonymous parameters from 
- * $params are are in the same order as specified in $query
- *
- * @param string $query The sql query with parameter placeholders
- * @param array $params The array of substitution parameters
- * @return string The interpolated query
- */
-public static function interpolateQuery($query, $params) {
-    $keys = array();
-
-    # build a regular expression for each parameter
-    foreach ($params as $key => $value) {
-        if (is_string($key)) {
-            $keys[] = '/:'.$key.'/';
-        } else {
-            $keys[] = '/[?]/';
-        }
-    }
-
-    $query = preg_replace($keys, $params, $query, 1, $count);
-
-    #trigger_error('replaced '.$count.' keys');
-
-    return $query;
-}
     
     /**
      * refresh the local db copy of feed data
@@ -53,9 +25,7 @@ public static function interpolateQuery($query, $params) {
         $data = json_decode($json);
 
         // delete any previous events for this feed
-        $sth = $this->connection->prepare('DELETE FROM events WHERE feed_id = :feed_id');
-        $sth->bindParam(':feed_id', $this->feedId, PDO::PARAM_INT);
-        $sth->execute();
+        $this->discard();
 
         // insert data into events table from feed
         foreach($data->items as $item) {

@@ -26,9 +26,8 @@ class LetsRideFeed extends Feed
         $json = file_get_contents($this->jsonUrl);
         $data = json_decode($json);
 
-        $this->connection->query('TRUNCATE TABLE events')->execute(); // danger
-
-        //echo "<pre>"; var_dump($data); echo "</pre>";
+        // delete any previous events for this feed
+        $this->discard();
         
         foreach($data->items as $item) {
 

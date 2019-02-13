@@ -17,9 +17,23 @@
  * 
  */
 
+/**
+ * why an interface? Because - for e.g. - every feed needs to refresh, but how that
+ * is done will vary
+ * On that basis, it's debatable whether I should be including the discard method
+ * since that is always done in the same way and is defined in detail in the implementing class
+ */
 interface FeedInterface
 {
+    /**
+     * refresh the local database with data from a remote feed
+     */
     public function refresh();
+    
+    /**
+     * delete local data previously imported from a remote feed
+     */
+    public function discard();
 }
 
 // ok so every feed will use the same local db connection, but a different json url
@@ -37,5 +51,11 @@ abstract class Feed extends BaseModel implements FeedInterface
         parent::__construct('feeds');   
     }
     
-
+    public function discard()
+    {
+        // delete any previous events for this feed
+        $sth = $this->connection->prepare('DELETE FROM events WHERE feed_id = :feed_id');
+        $sth->bindParam(':feed_id', $this->feedId, PDO::PARAM_INT);
+        $sth->execute();        
+    }
 }

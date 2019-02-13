@@ -3,7 +3,7 @@
     <h1>Admin</h1>
 
     <ul>
-        <li><a href="<?= URL_ROOT; ?>/feed/refresh/1">Refresh the db from the LetsRide feed</a></li>
+        <li><a href="<?= URL_ROOT; ?>/feed/refresh/LetsRide">Refresh the db from the LetsRide feed</a></li>
         <li><a href="<?= URL_ROOT; ?>/feed/refresh/BritishTriathlon">Refresh the db from the British Triathlon feed</a></li>
         <li><a href="<?= URL_ROOT; ?>/feed/refresh">Refresh the db from the activeNewham feed</a></li>
         <li><a href="<?= URL_ROOT; ?>/api/readAll">Create JSON feed from local data</a></li>
