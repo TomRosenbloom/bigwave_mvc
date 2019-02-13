@@ -9,31 +9,26 @@
  *
  */
 class FeedController extends BaseController
-{
+{  
 
-    protected $modelName;
-
-    /**
-     * set model identifier in constructor
-     */
-    public function __construct()
+    public function read($feedName)
     {
-        $this->modelName = "Feed";
+        $feedModelName = $feedName . 'Feed';
+        $feed = new $feedModelName;
+        $json = file_get_contents($feed->jsonUrl);
+        $json = json_decode($json, JSON_PRETTY_PRINT);
+        $this->view('feed/readAll', ['json'=>$json]);        
     }
     
-
-
     /**
-     * refresh local db from Lets Ride feed
-     * NB seems like the Let's Ride feed contains past events?
-     * That's ok. But something else wrong with dates - mostly 2500-01-01...
-     * (no future events with valid dates...)
+     * refresh local db from feed
      *
      * @return [type] [description]
      */
-    public function refresh()
+    public function refresh($feedName)
     {
-        $feed = new LetsRideFeed();
+        $feedModelName = $feedName . 'Feed';
+        $feed = new $feedModelName;
         $feed->refresh();
                 
         $this->view('feed/refresh', []);

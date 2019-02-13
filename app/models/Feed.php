@@ -29,7 +29,7 @@ interface FeedInterface
 abstract class Feed extends BaseModel implements FeedInterface
 {  
     protected $feedId;
-    protected $jsonUrl;
+    public $jsonUrl;
     
     function __construct() 
     {       
