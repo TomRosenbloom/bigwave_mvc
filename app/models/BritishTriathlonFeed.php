@@ -12,6 +12,35 @@ class BritishTriathlonFeed extends Feed
         $feedDetails = $this->getOneFromId($this->feedId);
         $this->jsonUrl = $feedDetails['url'];
     }
+
+
+/**
+ * Replaces any parameter placeholders in a query with the value of that
+ * parameter. Useful for debugging. Assumes anonymous parameters from 
+ * $params are are in the same order as specified in $query
+ *
+ * @param string $query The sql query with parameter placeholders
+ * @param array $params The array of substitution parameters
+ * @return string The interpolated query
+ */
+public static function interpolateQuery($query, $params) {
+    $keys = array();
+
+    # build a regular expression for each parameter
+    foreach ($params as $key => $value) {
+        if (is_string($key)) {
+            $keys[] = '/:'.$key.'/';
+        } else {
+            $keys[] = '/[?]/';
+        }
+    }
+
+    $query = preg_replace($keys, $params, $query, 1, $count);
+
+    #trigger_error('replaced '.$count.' keys');
+
+    return $query;
+}
     
     /**
      * refresh the local db copy of feed data
@@ -23,25 +52,23 @@ class BritishTriathlonFeed extends Feed
         $json = file_get_contents($this->jsonUrl);
         $data = json_decode($json);
 
-        //$this->connection->query('TRUNCATE TABLE events')->execute(); // danger
-        $this->connection->query('DELETE FROM TABLE events WHERE id = ' . $this->feedId)->execute();
+        // delete any previous events for this feed
+        $sth = $this->connection->prepare('DELETE FROM events WHERE feed_id = :feed_id');
+        $sth->bindParam(':feed_id', $this->feedId, PDO::PARAM_INT);
+        $sth->execute();
 
-        //echo "<pre>"; var_dump($data); echo "</pre>";
-        
+        // insert data into events table from feed
         foreach($data->items as $item) {
-
-            $name = $item->data->name;
-            $description = iconv('UTF-8', 'ASCII//TRANSLIT', $item->data->programme->description); // need a general functiom to sanitise inputs
-            //$description = iconv('UTF-8', 'ASCII//TRANSLIT', $item->data->description); 
+            if($item->state != 'deleted'){
+                $name = $item->data->name;
+                $description = iconv('UTF-8', 'ASCII//TRANSLIT', $item->data->description); 
+                $date = $item->data->startDate;    
+                $location = $item->data->location->description ?? $item->data->location->address->addressLocality ?? $item->data->location->address->postcode ?? 'not known';
+                $lat = $item->data->location->geo->latitude; 
+                $long = $item->data->location->geo->longitude; 
+                $url = $item->data->url;            
+            }
             
-            $date = $item->data->startDate;
-            $location = $item->data->location->description ?? $item->data->location->address->addressLocality ?? $item->data->location->address->postcode ?? 'not known';
-            $lat = $item->data->location->geo->latitude; // nb 'geo' also has 'type' which in current data is always 'GeoCoordinates'
-            $long = $item->data->location->geo->longitude; // really, I need a schema showing what values there are, but haven't found taht...
-            // thumbnail - there is nothing obvious to use as a thumbnail
-            // perhaps logo? or something generic?
-            $url = $item->data->url;
-
             try {
                 $sql = 'INSERT INTO events (feed_id, title, description, event_date, latitude, longitude) VALUES(?,?,?,?,?,?)';
                 $this->connection->prepare($sql)->execute([$this->feedId, $name, $description, $date, $lat, $long]);
