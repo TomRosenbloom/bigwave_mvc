@@ -10,6 +10,41 @@ class Event extends BaseModel
         parent::__construct('events');
     }
 
+    /**
+     * Override BaseModel->getAll
+     * in order to do a table join and get the feed name via foreign key
+     * This is how I'll have to do it for now in the absence of any kind of ORM
+     * 
+     * @return type
+     */
+    public function getAll()
+    {
+        $parentTable = 'feeds';
+        $foreignKey = 'feed_id';
+        $parentTableNameField = 'name';
+        $parentTableNameFieldAlias = substr($parentTable, 0, strlen($parentTable)-1) . '_' . $parentTableNameField;
+        
+        $sql = 'SELECT *, ' 
+                . $parentTable . '.' . $parentTableNameField
+                . ' AS ' .  $parentTableNameFieldAlias 
+                . ' FROM ' . $this->table
+                . ' JOIN ' . $parentTable 
+                . ' ON ' 
+                . $this->table . '.' . $foreignKey 
+                . ' = '
+                . $parentTable . '.id';
+        
+        try{
+            $stmt = $this->connection->prepare($sql);
+            $stmt->execute();
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch(PDOException $e){
+            echo 'ERROR: ' . $e->getMessage();
+        }
+
+        return $data;
+    }    
+    
     // find events within x km of a given postcode
     // https://www.mullie.eu/geographic-searches/
     // here in the model we use the form inputs collected by the controller,

@@ -36,7 +36,7 @@
                 <div id="listItems" style="height: 600px; overflow: scroll;">
                     <?php foreach($data['events_arr'] as $event) { ?>
                         <div class="" id="event_<?= $event['id']; ?>">
-                            <h3><?php echo $event['title']; ?></h3>
+                            <h3><?php echo $event['title']; ?><small class="float-right"><?php echo $event['feed_name']; ?></small></h3>
                             <p>Date: <?php echo $event['event_date']; ?></p>
                             <p><?php echo $event['description']; ?></p>
                         </div>
