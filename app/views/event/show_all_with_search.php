@@ -30,7 +30,7 @@
     <body>
 
         <div class="container">
-            <h1>LetsRide Cycling Events</h1>
+            <h1>Open Active Events</h1>
 
             <div class="listEvent" id="mapContainer">
                 <div id="map" style="height:400px;">
@@ -50,6 +50,15 @@
                                 <label for="range" class="col-sm-1">Range: </label>
                                 <div class="col-sm-3">
                                     <input class="form-control" type="text" name="range" value="<?= $data['post_vars']['range'] ?? ''; ?>" placeholder="enter a range in km">
+                                </div>
+                                
+                                <label for="feed" class="col-sm-1">Type: </label>
+                                <div class="col-sm-3">
+                                    <select id="feed">
+                                        <?php foreach ($data['feeds'] as $feed) { ?>
+                                        <option value="<?= $feed->id; ?>"><?= $feed->name; ?></option>
+                                        <?php } ?>
+                                    </select>
                                 </div>
 
                                 <div class="col-sm-1">

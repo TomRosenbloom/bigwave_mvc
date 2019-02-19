@@ -2,7 +2,7 @@
 
 //namespace App;
 
-class LetsRideFeed extends Feed
+class LetsRideFeed extends ExternalFeed
 {
     
     public function __construct()

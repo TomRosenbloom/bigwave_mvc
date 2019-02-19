@@ -1,16 +1,12 @@
 <?php
 
-class BritishTriathlonFeed extends Feed
+class BritishTriathlonFeed extends ExternalFeed
 {
     
     public function __construct()
     {
-        $this->feedId = 3; // this is just temporary - I need a better way of having a unique
-                           // identifier for each feed. Using the auto-increment table id is obvs bad idea
-        
+        $this->feedId = 3; 
         parent::__construct();
-        $feedDetails = $this->getOneFromId($this->feedId);
-        $this->jsonUrl = $feedDetails['url'];
     }
 
     

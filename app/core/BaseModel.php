@@ -42,6 +42,9 @@ abstract class BaseModel
     
     public function getOneFromId($id)
     {
+        $query = 'SELECT * FROM ' . $this->table . ' WHERE id = ?';
+        $params = [$id];
+        echo DebugHelper::interpolateQuery($query, $params);
         try{
             $stmt = $this->connection->prepare('SELECT * FROM ' . $this->table . ' WHERE id = ?');
             $stmt->execute([$id]);

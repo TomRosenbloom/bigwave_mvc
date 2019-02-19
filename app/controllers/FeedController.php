@@ -15,9 +15,8 @@ class FeedController extends BaseController
     {
         $feedModelName = $feedName . 'Feed';
         $feed = new $feedModelName;
-        $json = file_get_contents($feed->jsonUrl);
-        $json = json_decode($json, JSON_PRETTY_PRINT);
-        $this->view('feed/readAll', ['json'=>$json]);        
+        $jsonArr = $feed->readToArray();
+        $this->view('feed/read', ['json'=>$jsonArr]);        
     }
     
     /**
