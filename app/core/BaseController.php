@@ -4,8 +4,12 @@
 
 abstract class BaseController
 {
-
+    protected $modelName;
     protected $model;
+    
+    function __construct() {
+        $this->model = new $this->modelName;
+    }
 
     protected function model($modelName)
     {

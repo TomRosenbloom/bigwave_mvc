@@ -5,15 +5,73 @@
 
 class Event extends BaseModel
 {
+    /**
+     *
+     * @var type 
+     */
+    private $parentTable;
+    private $foreignKey;
+    private $parentTableNameField;
+    private $parentTableNameFieldAlias;
+    private $parentTableFields;
+
+        
     public function __construct()
     {
         parent::__construct('events');
+        
+        $this->setParentTable('feeds');
+        $this->setForeignKey('feed_id');
+        $this->setParentTableNameField('name');
+        $this->setParentTableNameFieldAlias();
     }
 
+      
+    public function getWhereWithJoin(array $paramTuples)
+    {
+        // add fields to SELECT clause
+        $query = 'SELECT *, ' . $this->parentTable . '.' . $this->parentTableNameField . ' ';
+        $query .= 'FROM ' . $this->table . ' ';
+        
+        // make a join
+        $query .= 'JOIN ' . $this->parentTable . ' ';
+        
+        // make a where clause from params
+        $paramVals = [];
+        if(count($paramTuples) > 0){
+            $where = ' WHERE ';
+            foreach($paramTuples as $paramTuple){
+                $name = $paramTuple['name'];
+                $value = $paramTuple['value'];
+                $comparison = $paramTuple['comparison'];
+                $paramVals[] = $value;
+                $where .= ' ' . $name . ' ' . $comparison . ' ? AND ';
+            }
+            $where = substr($where, 0, strlen($where) - 4);
+        }
+        
+        // stick the parts together
+        $query .= $where;
+
+        print_r(DebugHelper::interpolateQuery($query, $paramVals));
+        
+        try{
+            $stmt = $this->connection->prepare($query);
+            $stmt->execute($paramVals);
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch(PDOException $e){
+            echo 'ERROR: ' . $e->getMessage();
+        }
+
+        return $data;       
+    }    
+
+    
     /**
      * Override BaseModel->getAll
      * in order to do a table join and get the feed name via foreign key
      * This is how I'll have to do it for now in the absence of any kind of ORM
+     * ...and will have to do same for other methods getWhere and ...
      * 
      * @return type
      */
@@ -43,7 +101,8 @@ class Event extends BaseModel
         }
 
         return $data;
-    }    
+    }
+
     
     // find events within x km of a given postcode
     // https://www.mullie.eu/geographic-searches/
@@ -97,7 +156,7 @@ class Event extends BaseModel
         $east_long = $origin_long + rad2deg($distance/$radius/cos(deg2rad($origin_lat)));
         $west_long = $origin_long - rad2deg($distance/$radius/cos(deg2rad($origin_lat)));
 
-        return $this->getAllWhere(array(
+        return $this->getWhereWithJoin(array(
             array('name'=>'latitude', 'comparison'=>'<=', 'value'=>$north_lat),
             array('name'=>'latitude', 'comparison'=>'>=', 'value'=>$south_lat),
             array('name'=>'longitude', 'comparison'=>'<=', 'value'=>$east_long),
@@ -125,4 +184,50 @@ class Event extends BaseModel
         $data = json_decode($json, true);
         return array($data['result']['latitude'],$data['result']['longitude']);
     }
+    
+    function getParentTable() {
+        return $this->parentTable;
+    }
+
+    function getForeignKey() {
+        return $this->foreignKey;
+    }
+
+    function getParentTableNameField() {
+        return $this->parentTableNameField;
+    }
+
+    function getParentTableNameFieldAlias() {
+        return $this->parentTableNameFieldAlias;
+    }
+
+    function getParentTableFields() {
+        return $this->parentTableFields;
+    }
+
+    function setParentTable(string $parentTable) {
+        $this->parentTable = $parentTable;
+    }
+
+    function setForeignKey(string $foreignKey) {
+        $this->foreignKey = $foreignKey;
+    }
+
+    function setParentTableNameField(string $parentTableNameField) {
+        $this->parentTableNameField = $parentTableNameField;
+    }
+
+    function setParentTableNameFieldAlias() {
+        $this->parentTableNameFieldAlias = $this->parentTableFields = substr($this->parentTable, 0, strlen($this->parentTable)-1) . '_' . $this->parentTableNameField;
+    }
+
+    /**
+     * To specify which fields to retrieve from the parent table in a foreign key rel
+     * 
+     * @param array $parentTableFields
+     */
+    function setParentTableFields(array $parentTableFields) {
+        $this->parentTableFields = $parentTableFields;
+    }    
+    
 }

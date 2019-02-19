@@ -54,9 +54,10 @@
                                 
                                 <label for="feed" class="col-sm-1">Type: </label>
                                 <div class="col-sm-3">
-                                    <select id="feed">
+                                    <select id="feed" name="feed">
+                                        <option value="">Select event type</option>
                                         <?php foreach ($data['feeds'] as $feed) { ?>
-                                        <option value="<?= $feed->id; ?>"><?= $feed->name; ?></option>
+                                            <option value="<?= $feed['id']; ?>"><?= $feed['name']; ?></option>
                                         <?php } ?>
                                     </select>
                                 </div>
