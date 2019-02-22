@@ -35,21 +35,22 @@ class EventController extends BaseController
             $post_data = $this->getRequest()->getPostVars();
             $range = intval($post_data['range']);
             $postcode = $post_data['postcode']; // VALIDATION!!
-            $originFeed = $post_data['feed'];
+            $feed_id = $post_data['feed'];
             $clear = $post_data['clear'] ?? null;
             
             
             // quick bodge
-            if(!empty($originFeed)){
-                //echo $originFeed;
+            if(!empty($feed_id)){
+                
                 $data['events_arr'] = $event->getWhereWithJoin(array(
 //                  array('name'=>'latitude', 'comparison'=>'<=', 'value'=>$north_lat),
 //                  array('name'=>'latitude', 'comparison'=>'>=', 'value'=>$south_lat),
 //                  array('name'=>'longitude', 'comparison'=>'<=', 'value'=>$east_long),
 //                  array('name'=>'longitude', 'comparison'=>'>=', 'value'=>$west_long),
-                    array('name'=>'feed_id', 'comparison'=>'=', 'value'=>$originFeed)
+                    array('name'=>'feed_id', 'comparison'=>'=', 'value'=>$feed_id)
                 ));
-                $data['events_json'] = json_encode($data['events_arr']);
+                $data['events_json'] = json_encode($data['events_arr']); 
+//                echo "<pre>"; var_dump($data['events_arr']); echo "</pre>";
             }
 
 
@@ -63,9 +64,12 @@ class EventController extends BaseController
 //            } else { // use entered postcode to get lat and lng for range origin
 //                list($lat, $lng) = $event->postcode_lat_lng($postcode);
 //            }
-//
-//            // send post vars back to view for display in form
-//            $data['post_vars'] = $post_data;
+
+            // send post vars back to view for display in form
+            $data['post_vars'] = $post_data;
+            
+            // if an origin feed was selected as a filter, get its name and return for display in the view
+            $data['feed_name'] = $feed->getOneFromId($feed_id)['name'];
 //
 //            // send event data to form as json for map and array for list
 //            $data['events_arr'] = $event->events_in_circle($range, $lat, $lng);

@@ -24,17 +24,26 @@ class Event extends BaseModel
         $this->setForeignKey('feed_id');
         $this->setParentTableNameField('name');
         $this->setParentTableNameFieldAlias();
+        $this->setParentTableFields(array('name')); // not currently using this - the idea is to be able to retrieve not just the name field
+                                                    // should be an array of names and aliases - or the aliases are generated auto
     }
 
-      
+    
+    protected function createFieldNameAlias(string $tableName, string $fieldName)
+    {
+        return substr($tableName, 0, strlen($tableName)-1) . '_' . $fieldName;
+    }
+    
     public function getWhereWithJoin(array $paramTuples)
     {
         // add fields to SELECT clause
         $query = 'SELECT *, ' . $this->parentTable . '.' . $this->parentTableNameField . ' ';
+        $query .= 'AS ' . $this->parentTableNameFieldAlias . ' ';
         $query .= 'FROM ' . $this->table . ' ';
         
         // make a join
         $query .= 'JOIN ' . $this->parentTable . ' ';
+        $query .= 'ON ' . $this->table . '.' . $this->foreignKey . ' = ' . $this->parentTable . '.id ';
         
         // make a where clause from params
         $paramVals = [];
@@ -53,7 +62,7 @@ class Event extends BaseModel
         // stick the parts together
         $query .= $where;
 
-        print_r(DebugHelper::interpolateQuery($query, $paramVals));
+        //print_r(DebugHelper::interpolateQuery($query, $paramVals));
         
         try{
             $stmt = $this->connection->prepare($query);
@@ -218,7 +227,8 @@ class Event extends BaseModel
     }
 
     function setParentTableNameFieldAlias() {
-        $this->parentTableNameFieldAlias = $this->parentTableFields = substr($this->parentTable, 0, strlen($this->parentTable)-1) . '_' . $this->parentTableNameField;
+        $this->parentTableNameFieldAlias = $this->createFieldNameAlias($this->parentTable, $this->parentTableNameField);
+        //$this->parentTableNameFieldAlias = $this->parentTableFields = substr($this->parentTable, 0, strlen($this->parentTable)-1) . '_' . $this->parentTableNameField;
     }
 
     /**
