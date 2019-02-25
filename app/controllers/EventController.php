@@ -33,26 +33,48 @@ class EventController extends BaseController
 
         if($this->getRequest()->getMethod() === 'POST') {
             $post_data = $this->getRequest()->getPostVars();
-            $range = intval($post_data['range']);
+            $rangeKm = intval($post_data['range']);
             $postcode = $post_data['postcode']; // VALIDATION!!
             $feed_id = $post_data['feed'];
             $clear = $post_data['clear'] ?? null;
-            
-            
-            // quick bodge
-            if(!empty($feed_id)){
-                
-                $data['events_arr'] = $event->getWhereWithJoin(array(
-//                  array('name'=>'latitude', 'comparison'=>'<=', 'value'=>$north_lat),
-//                  array('name'=>'latitude', 'comparison'=>'>=', 'value'=>$south_lat),
-//                  array('name'=>'longitude', 'comparison'=>'<=', 'value'=>$east_long),
-//                  array('name'=>'longitude', 'comparison'=>'>=', 'value'=>$west_long),
-                    array('name'=>'feed_id', 'comparison'=>'=', 'value'=>$feed_id)
-                ));
-                $data['events_json'] = json_encode($data['events_arr']); 
-//                echo "<pre>"; var_dump($data['events_arr']); echo "</pre>";
-            }
 
+            $postcodeRange = new PostcodeRange($postcode, $rangeKm);
+            $data['events_arr'] = $event->getFiltered($postcodeRange, $feed_id);
+            $data['events_json'] = json_encode($data['events_arr']);
+            
+//            // just dealing with feed filter...
+//            if(!empty($feed_id)){
+//                
+//                $data['events_arr'] = $event->getWhereWithJoin(array(
+//                    array('name'=>'feed_id', 'comparison'=>'=', 'value'=>$feed_id)
+//                ));
+//                $data['events_json'] = json_encode($data['events_arr']); 
+////                echo "<pre>"; var_dump($data['events_arr']); echo "</pre>";
+//            }
+
+            
+            // how to do filtering on both range and feed?
+            // this is a bit tricky - the existing code for doing a range search
+            // uses getWhereWithJoin within the model, but in the new code for
+            // filtering on feed we are doing it more directly in this controller
+            // so I can't combine these two into one query - that would be v confusing anyway
+            // I want the intersection of two queries
+            // A single use of getWhereWithJoin that I send all the params through to?
+            // A use of getWhereWithJoin with 'post facto' filtering?
+            
+            // or, wrap up the range related stuff in a single filtering function
+            // currently I'm doing two separate stages in this controller, ie
+            // 1. get lat long of postcode
+            // 2. call , but I should 
+            // better wrap them in a single function $event->events_in_circle($range, $lat, $lng)
+            // The reason I did it this way is it's more obvious how to have default values
+            // but in fact that should be easy enough to deal with in wrapper function ('service'?)
+            // i.e. in case postcode/range are not set
+            
+            // There's a general question here of how to deal with multiple filters
+            
+            
+            
 
 //            // if the Clear button was pressed, or we don't have both postcode and range, use default values - to show all events
 //            // In addition - and prior - to this there needs to be form validation

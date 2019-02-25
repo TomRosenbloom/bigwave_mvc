@@ -3,6 +3,38 @@
 //namespace App;
 //use \BaseModel;
 
+class PostcodeRange
+{
+    private $postcode;
+    private $rangeKm;
+    
+    public function __construct(string $postcode, int $rangeKm)
+    {
+        $this->setPostcode($postcode);
+        $this->setRangeKm($rangeKm); 
+    }
+    
+    function getPostcode() {
+        return $this->postcode;
+    }
+
+    function getRangeKm() {
+        return $this->rangeKm;
+    }
+
+    function setPostcode($postcode) {
+        // validate postcode here?
+        
+        $this->postcode = $postcode;
+    }
+
+    function setRangeKm($rangeKm) {
+        $this->rangeKm = $rangeKm;
+    }
+
+
+}
+
 class Event extends BaseModel
 {
     /**
@@ -29,11 +61,59 @@ class Event extends BaseModel
     }
 
     
+    /**
+     * return array of events filtered by postcode range and origin feed
+     * 
+     * 
+     * @param PostcodeRange $range
+     * @param int $feed_id
+     * @return type
+     */
+    public function getFiltered(PostcodeRange $range, int $feed_id)
+    {
+        $filterResults = [];
+        if(isset($feed_id))
+        {
+            $filteredByFeed = $this->getWhereWithJoin(array(
+                array('name'=>'feed_id', 'comparison'=>'=', 'value'=>$feed_id)
+            ));
+            $filterResults['filteredByFeed'] = array_map('serialize', $filteredByFeed);
+            
+        }
+        if(isset($range)) {
+            $postcode = $range->getPostcode();
+            $rangeKm = $range->getRangeKm();
+            $filteredByRange = $this->getEventsInRange($postcode, $rangeKm);
+            $filterResults['filteredByRange'] = array_map('serialize', $filteredByRange);
+        }
+        
+        // https://stackoverflow.com/a/31411350
+
+        return array_map('unserialize', call_user_func_array('array_intersect', $filterResults));
+
+    }
+    
+    /**
+     * create alias for field name in database queries according to prescribed formula:
+     * tableName_fieldName
+     * 
+     * @param string $tableName
+     * @param string $fieldName
+     * @return string
+     */
     protected function createFieldNameAlias(string $tableName, string $fieldName)
     {
         return substr($tableName, 0, strlen($tableName)-1) . '_' . $fieldName;
     }
     
+    /**
+     * do a db query that 
+     * 1. joins with a table related via foreign key
+     * 2. has a where clause
+     * 
+     * @param array $paramTuples
+     * @return array
+     */
     public function getWhereWithJoin(array $paramTuples)
     {
         // add fields to SELECT clause
@@ -78,7 +158,7 @@ class Event extends BaseModel
     
     /**
      * Override BaseModel->getAll
-     * in order to do a table join and get the feed name via foreign key
+     * ...in order to do a table join and get the feed name via foreign key
      * This is how I'll have to do it for now in the absence of any kind of ORM
      * ...and will have to do same for other methods getWhere and ...
      * 
@@ -124,10 +204,22 @@ class Event extends BaseModel
     // 3. make a function that extracts just the events in a circle around given lat/lng
     //    - uses 1. to test the results of 2. and reject ones too far from centre
     //
-    //    Oh and will need a function to get lat/lng from postcode
-    //    ...will put that in here for noow, but doesn't strictly belong (need a helpers folder?)
 
 
+    public function getEventsInRange(string $postcode, int $rangeKm)
+    {
+        if(!empty($postcode) && !empty($rangeKm)){
+            list($lat, $lng) = $this->postcode_lat_lng($postcode);
+        } else {
+            $lat = 52; // set these defaults elsewhere as constants
+            $lng = 0;
+            $rangeKm = 999;
+        }
+        $events_arr = $this->events_in_circle($rangeKm, $lat, $lng);
+        return $events_arr;
+    }
+    
+    
     /**
      * return the distance between two locations
      * - really this belongs somewhere else as it is a general utility
@@ -173,7 +265,7 @@ class Event extends BaseModel
             ));
     }
 
-    public function events_in_circle($radius, $origin_lat, $origin_long)
+    public function events_in_circle(int $radius, float $origin_lat, float $origin_long)
     {
         $events = [];
         $eventsInSquare = $this->events_in_square($radius, $origin_lat, $origin_long);
