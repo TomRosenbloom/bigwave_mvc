@@ -99,6 +99,15 @@ abstract class BaseModel
         return $data;
     }
 
+    /**
+     * execute a query passed as string, using params if required
+     * NB this will require the query to be supplied in correct way wrt prepared query syntax
+     * ...should add some checking of that
+     * 
+     * @param type $query
+     * @param type $params
+     * @return array
+     */
     public function doQuery($query, $params)
     {
         // execute a query passed in as string
@@ -119,6 +128,11 @@ abstract class BaseModel
         return $data;        
     }
 
+    /**
+     * get first id from table
+     * 
+     * @return string the id number
+     */
     public function getFirstId()
     {
         $sql = 'SELECT MIN(id) AS id FROM ' . $this->table;
