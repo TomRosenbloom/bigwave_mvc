@@ -57,7 +57,7 @@
                                     <select id="feed" name="feed">
                                         <option value="">Select event type</option>
                                         <?php foreach ($data['feeds'] as $feed) { ?>
-                                            <option value="<?= $feed['id']; ?>" <?php echo($data['post_vars']['feed'] == $feed['id']) ? 'selected = "selected"' : ''; ?>><?= $feed['name']; ?></option>
+                                            <option value="<?= $feed['id']; ?>" <?php if(isset($data['post_vars'])){ echo($data['post_vars']['feed'] == $feed['id']) ? 'selected = "selected"' : ''; } ?>><?= $feed['name']; ?></option>
                                         <?php } ?>
                                     </select>
                                 </div>

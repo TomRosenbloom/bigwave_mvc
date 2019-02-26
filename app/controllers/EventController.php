@@ -37,10 +37,15 @@ class EventController extends DomainModelController
             $feed_id = $post_data['feed'];
             $clear = $post_data['clear'] ?? null;
 
-            $postcodeRange = new PostcodeRange($postcode, $rangeKm);
-            $data['events_arr'] = $event->getFiltered($postcodeRange, $feed_id);
+            if($clear){
+                $data['events_arr'] = $this->model->getAll();
+                $post_data = [];
+            } else {
+                $postcodeRange = new PostcodeRange($postcode, $rangeKm);
+                $data['events_arr'] = $event->getFiltered($postcodeRange, $feed_id);                    
+            }
+            
             $data['events_json'] = json_encode($data['events_arr']);
-
 
             // send post vars back to view for display in form
             $data['post_vars'] = $post_data;
