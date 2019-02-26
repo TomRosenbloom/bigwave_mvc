@@ -3,6 +3,9 @@
 //namespace App;
 //use \BaseModel;
 
+// a class for creation of postcode/distance ranges
+// having this class allows type hinting where these ranges are used
+// it didn't ought to be in here though...
 class PostcodeRange
 {
     private $postcode;
