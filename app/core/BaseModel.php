@@ -107,6 +107,22 @@ abstract class BaseModel
         // Also he has the methods I have above for getting all, getting where, count rows, etc in that
         // database class, not in a base model class like I'm doing here
         // Will be interesting to see if he has a base model later on and if so what he has in it
+        
+        try{
+            $stmt = $this->connection->prepare($query);
+            $stmt->execute($params);
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch(PDOException $e){
+            echo 'ERROR: ' . $e->getMessage();
+        }
+
+        return $data;        
     }
 
+    public function getFirstId()
+    {
+        $sql = 'SELECT MIN(id) AS id FROM ' . $this->table;
+        $result = $this->doQuery($sql, []);
+        return $result[0]['id'];
+    }
 }

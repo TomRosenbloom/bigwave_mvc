@@ -5,7 +5,7 @@
 class EventController extends DomainModelController
 {
     /**
-     * set model identifier in constructor
+     * set model identifier
      */
     public function __construct()
     {
@@ -17,6 +17,9 @@ class EventController extends DomainModelController
         $this->view('event/index','');
     }
     
+    /**
+     * show all events, with a form for searching/filtering results
+     */
     public function show_all_with_search()
     {
         $event = $this->model; // (pointless) assignment to change var name hence make code clearer
@@ -59,6 +62,9 @@ class EventController extends DomainModelController
     }
 
 
+    /**
+     * show all the events
+     */
     public function show_all()
     {
         $event = $this->model;
@@ -69,10 +75,15 @@ class EventController extends DomainModelController
     }
 
 
+    /**
+     * show just one event
+     * 
+     * @param int $id
+     */
     public function show_one($id = '')
     {
-        $id = 1;
         $event = new Event();
+        $id = $event->getFirstId(); // temp: for proof of concept
         $data = $event->getOneFromId($id);
 
         $this->view('event/show_one', $data);
