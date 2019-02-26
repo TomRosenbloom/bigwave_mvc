@@ -47,7 +47,7 @@ abstract class ExternalFeed extends Feed implements FeedInterface
     public function __construct()
     {
         parent::__construct();
-        echo $this->feedId;
+        //echo $this->feedId;
         $feedDetails = $this->getOneFromId($this->feedId);
         $this->jsonUrl = $feedDetails['url'];
     }

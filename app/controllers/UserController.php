@@ -1,14 +1,17 @@
 <?php
 
-use App\UrlHelper;
-use App\SessionHelper;
+//use App\UrlHelper;
+//use App\SessionHelper;
 
-class UserController extends BaseController
+class UserController extends DomainModelController
 {
 
+    /**
+     * set model identifier
+     */
     public function __construct()
     {
-        $this->model('User');
+        parent::__construct("User");
     }
 
     public function register()

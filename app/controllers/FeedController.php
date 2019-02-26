@@ -8,9 +8,16 @@
  * (they should probably be in separate controllers)
  *
  */
-class FeedController extends BaseController
+class FeedController extends DomainModelController
 {  
-
+    /**
+     * set model identifier
+     */
+    public function __construct()
+    {
+        parent::__construct("Feed");
+    }
+    
     public function read($feedName)
     {
         $feedModelName = $feedName . 'Feed';
