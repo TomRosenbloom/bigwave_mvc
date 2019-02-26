@@ -57,7 +57,7 @@
                                     <select id="feed" name="feed">
                                         <option value="">Select event type</option>
                                         <?php foreach ($data['feeds'] as $feed) { ?>
-                                            <option value="<?= $feed['id']; ?>" <?php if(isset($data['post_vars'])){ echo($data['post_vars']['feed'] == $feed['id']) ? 'selected = "selected"' : ''; } ?>><?= $feed['name']; ?></option>
+                                            <option value="<?= $feed['id']; ?>" <?php if(isset($data['post_vars']['feed'])){ echo($data['post_vars']['feed'] == $feed['id']) ? 'selected = "selected"' : ''; } ?>><?= $feed['name']; ?></option>
                                         <?php } ?>
                                     </select>
                                 </div>
@@ -84,7 +84,7 @@
                 <div id="listItems" style="height: 600px; overflow: scroll;">
                     <?php foreach($data['events_arr'] as $event) { ?>
                         <div class="" id="event_<?= $event['id']; ?>">
-                            <h3><?php echo $event['title']; ?><small class="float-right"><?php echo $event['feed_name']; // not working - problem with the join I think ?></small></h3>
+                            <h3><?php echo $event['title']; ?><small class="float-right"><?php echo $event['feed_name']; ?></small></h3>
                             <p>Date: <?php echo $event['event_date']; ?></p>
                             <p><?php echo $event['description']; ?></p>
                         </div>
