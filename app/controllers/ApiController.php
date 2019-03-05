@@ -26,6 +26,7 @@ class ApiController extends BaseController
     public function readOne($id = '')
     {        
         $event = new Event();
+        $id = $event->getFirstId(); // temp: for proof of concept
         $data = $event->getOneFromId($id);
         $json = json_encode($data);
         $this->view('api/readOne', ['json'=>$json]);

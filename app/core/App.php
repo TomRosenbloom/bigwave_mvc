@@ -4,23 +4,57 @@
 
 class App
 {
-    protected $url_parts;
-    protected $controller = 'HomeController';
+    protected $url_tokens;
+    protected $controller;
+    protected $controllerName = 'HomeController';
     protected $method = 'index';
     protected $params = [];
 
     public function __construct()
     {
         session_start(); // session always on
-        
-        $this->url_parts = $this->parseUrl();
-        $this->setController($this->url_parts);
-        $this->setMethod($this->url_parts);
-        $this->setParams($this->url_parts);
 
-        $this->executeControllerAction();
+        $router = new Router();
+      
+        $this->url_tokens = $router->parse($_SERVER['REQUEST_URI']);
+        var_dump($this->url_tokens);
+        
+        $this->controller = $this->controllerFactory($this->url_tokens);
+        var_dump($this->controller);
+        
+        $this->method = $this->setMethod($this->url_tokens);
+        var_dump($this->method);
+        
+//        $this->setParams($this->url_tokens);
+
+        //$this->executeControllerAction();
+        call_user_func_array([$this->controller, $this->method], $this->params);
     }
 
+    public function controllerFactory(array $url_tokens)
+    {
+        if (!empty($url_tokens['controller'])) {
+            if (class_exists(ucwords($url_tokens['controller']) . "Controller")) {
+                $this->controllerName = ucwords($url_tokens['controller']) . "Controller";
+                //$controller = new $this->controllerName;
+            } else {
+                throw new \Exception('No controller called ' . $this->controller);
+            }
+        }
+        return  new $this->controllerName;
+    }
+    
+    public function setMethod(array $url_tokens)
+    {
+        if (!empty($url_tokens['action'])) {
+            $method = ucwords($url_tokens['action']);
+        } else {
+            $method = 'index';
+        }
+        return $method;
+    }    
+
+    
     public function executeControllerAction()
     {
         if (!class_exists($this->controller)){
@@ -35,27 +69,68 @@ class App
         call_user_func_array([$controller_callable, $this->method], $this->params);
     }
 
-    public function parseUrl()
-    {
-        $url_elements = explode('/', $_SERVER['REQUEST_URI']);
-        return $url_elements;
-    }
-
-    public function setController($url_parts)
-    {
-        if(isset($url_parts[1]) && !empty($url_parts[1])) {
-            $this->controller = ucfirst($url_parts[1]) . 'Controller';
+    
+    // Many times it seems like we have a choice between returning the 
+    // name of an object and then using that to instatiate, or returning 
+    // an object directly
+    // It feels like the latter is more 'correct'
+    // 
+    // Anyway in the current sitch, how do we get the action, and any params?
+    // It doesn't make sense to return an action/method 'object', as it does for 
+    // controller, because actions aren't classes
+    
+    // do not want to parse the url twice
+    
+//class ControllerFactory {
+    public function createControllerFromRouter(Router $router) {
+        $result = $router->parse($_SERVER['REQUEST_URI']);
+        echo "<pre>", var_dump($result), "</pre>";
+        if (isset($result['controller'])) {
+            if (class_exists(ucwords($result['controller']) . "Controller")) {
+                $controller = ucwords($result['controller']) . "Controller";
+                return new $controller();
+            }
         }
-        return $this;
     }
+//}    
+  
+    
 
-    public function setMethod($url_parts)
+
+
+//    public function parseUrl()
+//    {
+//        $url_elements = explode('/', $_SERVER['REQUEST_URI']);
+//        return $url_elements;
+//    }
+
+    public function setControllerName(array $url_tokens)
     {
-        if(isset($url_parts[2]) && !empty($url_parts[2])) {
-            $this->method = $url_parts[2];
+        if (isset($url_tokens['controller'])) {
+            if (class_exists(ucwords($url_tokens['controller']) . "Controller")) {
+                $this->controllerName = ucwords($url_tokens['controller']) . "Controller";
+            }
         }
-        return $this;
-    }
+    }    
+
+
+    
+    
+//    public function setController($url_parts)
+//    {
+//        if(isset($url_parts[1]) && !empty($url_parts[1])) {
+//            $this->controller = ucfirst($url_parts[1]) . 'Controller';
+//        }
+//        return $this;
+//    }
+
+//    public function setMethod($url_parts)
+//    {
+//        if(isset($url_parts[2]) && !empty($url_parts[2])) {
+//            $this->method = $url_parts[2];
+//        }
+//        return $this;
+//    }
 
     /**
      * extract params (everything after controller and action) from url
@@ -75,7 +150,7 @@ class App
     }
 
     /**
-     * not an essential MVC componenet, just for testing
+     * not an essential MVC component, just for testing
      *
      * @return [type] [description]
      */

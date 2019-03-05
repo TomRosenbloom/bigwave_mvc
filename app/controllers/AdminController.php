@@ -10,4 +10,9 @@ class AdminController extends BaseController
 
         $this->view('admin/index', []);
     }
+    
+    public function test()
+    {
+        $this->view('admin/test', []);
+    }
 }
