@@ -5,6 +5,10 @@
 abstract class BaseController
 {
 
+    public function index()
+    {
+        echo "No index method defined for ". static::class;
+    }
 
     /**
      * this is super primitive...

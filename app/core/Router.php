@@ -16,8 +16,26 @@ class Router {
     public function __construct() 
     {
         $this->addRoute("/(admin)/(test)", array("controller", "action"));
+        $this->addRoute("/(.*?)/(.*?)(?:/(.*)){0,}", array("controller", "action", "params"));
+        
         $this->addRoute("/(.*)/(.*)", array("controller", "action"));
         $this->addRoute("/(.*)", array("controller"));
+        
+/*
+
+  //$pattern = "(?:/(.*?))(/(.*)){0,}";
+$pattern = "/(?P<controller>.*?)/(?P<action>.*?)(/(.*)){0,}";
+$url = "/controller/action/param1/param2";
+//$url = "/controller/action";
+//$url = "/controller";
+
+preg_match("@^" . $pattern . "$@", $url, $matches);
+echo "<pre>";
+print_r($matches);
+echo "</pre>";
+          
+*/    
+        
     }
 
     /**
@@ -41,7 +59,8 @@ class Router {
         foreach ($this->routes as $route) {
             // work through the routes until we find one that matches the url
             // take tokens representing controller, action, params, from the route
-            preg_match("@^" . $route['pattern'] . "$@", $url, $matches);
+            $pattern = "@^" . $route['pattern'] . "$@";
+            preg_match($pattern, $url, $matches);
             if ($matches) {
                 foreach ($matches as $key=>$match) {
                     // Not interested in the complete match, just the tokens
