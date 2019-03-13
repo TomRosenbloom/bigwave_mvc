@@ -9,32 +9,17 @@ class Router {
      * each route is defined with:
      * 1. a regex pattern
      * 2. an array of tokens to be taken from the regex
-     * Round brackets in regex create 'capturing sub-patterns' 
+     * Round brackets in regex create capturing subpatterns
      * we will later use preg_match to match sub-patterns to tokens
      * 
      */
     public function __construct() 
     {
         $this->addRoute("/(admin)/(test)", array("controller", "action"));
-        $this->addRoute("/(.*?)/(.*?)(?:/(.*)){0,}", array("controller", "action", "params"));
-        
+        $this->addRoute("/(.*?)/(.*?)(?:/(.*)){0,}", array("controller", "action", "params"));       
         $this->addRoute("/(.*)/(.*)", array("controller", "action"));
         $this->addRoute("/(.*)", array("controller"));
-        
-/*
-
-  //$pattern = "(?:/(.*?))(/(.*)){0,}";
-$pattern = "/(?P<controller>.*?)/(?P<action>.*?)(/(.*)){0,}";
-$url = "/controller/action/param1/param2";
-//$url = "/controller/action";
-//$url = "/controller";
-
-preg_match("@^" . $pattern . "$@", $url, $matches);
-echo "<pre>";
-print_r($matches);
-echo "</pre>";
-          
-*/    
+  
         
     }
 

@@ -20,11 +20,9 @@ class App
         
         //var_dump($this->url_tokens); echo "<br>";
         
-        $this->controller = $this->controllerFactory($this->url_tokens);
-        
-        $this->method = $this->setMethod($this->url_tokens);
-        
-//        $this->setParams($this->url_tokens);
+        $this->controller = $this->controllerFactory($this->url_tokens);       
+        $this->method = $this->setMethod($this->url_tokens);        
+        $this->setParams($this->url_tokens);
 
         //$this->executeControllerAction();
         call_user_func_array([$this->controller, $this->method], $this->params);
@@ -36,16 +34,23 @@ class App
             if (class_exists(ucwords($url_tokens['controller']) . "Controller")) {
                 $this->controllerName = ucwords($url_tokens['controller']) . "Controller";
             } else {
-                throw new \Exception('No controller of name ' . $url_tokens['controller'] . "Controller");
+                //throw new \Exception('No controller of name ' . $url_tokens['controller'] . "Controller");
+                // ...don't do anything - use the default
             }
         }
         return new $this->controllerName;
     }
     
+    /*
+     * in adding test for existence of controller action
+     * I've introduced a hidden dependency...
+     */
     public function setMethod(array $url_tokens)
     {
-        if (!empty($url_tokens['action'])) {
+        if (!empty($url_tokens['action']) && method_exists($this->controller, ucwords($url_tokens['action']))) {
+            
             $method = ucwords($url_tokens['action']);
+        
         } else {
             $method = 'index';
         }
@@ -95,14 +100,20 @@ class App
      *
      * @param [type] $url_parts [description]
      */
-    public function setParams($url_parts)
+//    public function setParams($url_parts)
+//    {
+//        if(array_key_exists(3, $url_parts)) {
+//            $this->params = array_slice($url_parts,3);
+//        }
+//        return $this;
+//    }
+    public function setParams($url_tokens)
     {
-        if(array_key_exists(3, $url_parts)) {
-            $this->params = array_slice($url_parts,3);
+        if (isset($url_tokens['params'])) {
+            $this->params = explode("/",$url_tokens['params']);
         }
-        return $this;
     }
-
+    
     /**
      * not an essential MVC component, just for testing
      *
