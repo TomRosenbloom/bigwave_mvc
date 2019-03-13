@@ -120,7 +120,7 @@ class Event extends BaseModel
     public function getWhereWithJoin(array $paramTuples)
     {
         // add fields to SELECT clause
-        $query = 'SELECT *, ' . $this->parentTable . '.' . $this->parentTableNameField . ' ';
+        $query = 'SELECT ' . $this->table . '.*, ' . $this->parentTable . '.' . $this->parentTableNameField . ' ';
         $query .= 'AS ' . $this->parentTableNameFieldAlias . ' ';
         $query .= 'FROM ' . $this->table . ' ';
         
@@ -174,7 +174,7 @@ class Event extends BaseModel
         $parentTableNameField = 'name';
         $parentTableNameFieldAlias = substr($parentTable, 0, strlen($parentTable)-1) . '_' . $parentTableNameField;
         
-        $sql = 'SELECT *, ' 
+        $sql = 'SELECT ' . $this->table . '.*, ' 
                 . $parentTable . '.' . $parentTableNameField
                 . ' AS ' .  $parentTableNameFieldAlias 
                 . ' FROM ' . $this->table
@@ -184,6 +184,8 @@ class Event extends BaseModel
                 . ' = '
                 . $parentTable . '.id';
         
+ //print_r(DebugHelper::interpolateQuery($sql, []));   
+ 
         try{
             $stmt = $this->connection->prepare($sql);
             $stmt->execute();
