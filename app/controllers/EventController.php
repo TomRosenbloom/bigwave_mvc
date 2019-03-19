@@ -58,7 +58,8 @@ class EventController extends DomainModelController
             
         }
 
-        $this->view('event/show_all_with_search', $data);   
+        //$this->view('event/show_all_with_search', $data);
+        $this->view('event/vue_test', $data);
     }
 
 
