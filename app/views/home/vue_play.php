@@ -51,12 +51,6 @@
 <?php require APP_ROOT . '/views/inc/footer.php'; ?>
 
 <script>
-Vue.component('say-hello', {
-  template: '<p>Hello</p>'
-})
-var hello = new Vue({
-    el: '#hello'
-})
 
 Vue.component('event-detail', {
   props: ['event'],
@@ -76,14 +70,6 @@ var eventList = new Vue({
 
 </script>
 
-<script>
-    $(document).ready(function(){
-        $("#reverse p").html("Hello");
-        $("#reverse button").click(function(){
-            $("#reverse p").html($("#reverse p").html().split('').reverse().join(''));
-        })
-    });
-</script>
 
 <script>
 //Vue.config.devtools = true;
@@ -119,4 +105,17 @@ var app5 = new Vue({
 })
 
 
+$(document).ready(function(){
+    $("#reverse p").html("Hello");
+    $("#reverse button").click(function(){
+        $("#reverse p").html($("#reverse p").html().split('').reverse().join(''));
+    })
+});
+
+Vue.component('say-hello', {
+  template: '<p>Hello</p>'
+})
+var hello = new Vue({
+    el: '#hello'
+})
 </script>

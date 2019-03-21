@@ -18,7 +18,7 @@ abstract class BaseModel
     public function __construct($table)
     {
         $this->table = $table;
-        $this->dbConnect(); //// sure? Does every model method need a database connection?
+        $this->connection = $this->dbConnect(); //// sure? Does every model method need a database connection?
     }
 
 
@@ -28,10 +28,11 @@ abstract class BaseModel
     {
         $db = Database::getInstance($this->config);
         try {
-            $this->connection = $db->getConnection();
+            $connection = $db->getConnection();
         } catch(PDOException $e) {
             echo $e->getMessage();
         }
+        return $connection;
     }
 
     
@@ -138,5 +139,13 @@ abstract class BaseModel
         $sql = 'SELECT MIN(id) AS id FROM ' . $this->table;
         $result = $this->doQuery($sql, []);
         return $result[0]['id'];
+    }
+    
+    
+    public function getCount()
+    {
+        $sql = 'SELECT COUNT(*) FROM ' . $this->table;
+        $count = $this->connection->query($sql)->fetchColumn();
+        return $count;        
     }
 }

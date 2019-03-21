@@ -109,6 +109,62 @@ class Event extends BaseModel
         return substr($tableName, 0, strlen($tableName)-1) . '_' . $fieldName;
     }
     
+    
+    /**
+     * do a db query that 
+     * 1. joins with a table related via foreign key
+     * 2. has a where clause
+     * 3. has a limit clause
+     * 
+     * @param array $paramTuples
+     * @return array
+     */
+    public function getWhereWithJoinLimit(array $paramTuples, int $limit, int $offset)
+    {
+        // add fields to SELECT clause
+        $query = 'SELECT ' . $this->table . '.*, ' . $this->parentTable . '.' . $this->parentTableNameField . ' ';
+        $query .= 'AS ' . $this->parentTableNameFieldAlias . ' ';
+        $query .= 'FROM ' . $this->table . ' ';
+        
+        // make a join
+        $query .= 'JOIN ' . $this->parentTable . ' ';
+        $query .= 'ON ' . $this->table . '.' . $this->foreignKey . ' = ' . $this->parentTable . '.id ';
+        
+        // make a where clause from params
+        $paramVals = [];
+        if(count($paramTuples) > 0){
+            $where = ' WHERE ';
+            foreach($paramTuples as $paramTuple){
+                $name = $paramTuple['name'];
+                $value = $paramTuple['value'];
+                $comparison = $paramTuple['comparison'];
+                $paramVals[] = $value;
+                $where .= ' ' . $name . ' ' . $comparison . ' ? AND ';
+            }
+            $where = substr($where, 0, strlen($where) - 4);
+        }
+        
+        // make limit clause
+        $limit_clause .= 'LIMIT ' . $limit . ' ' . $offset . ' ';
+        
+        // stick the parts together
+        $query .= $where;
+        $query .= $limit_clause;
+
+        //print_r(DebugHelper::interpolateQuery($query, $paramVals));
+        
+        try{
+            $stmt = $this->connection->prepare($query);
+            $stmt->execute($paramVals);
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch(PDOException $e){
+            echo 'ERROR: ' . $e->getMessage();
+        }
+
+        return $data;       
+    }   
+
+    
     /**
      * do a db query that 
      * 1. joins with a table related via foreign key
@@ -158,6 +214,38 @@ class Event extends BaseModel
         return $data;       
     }    
 
+     public function getLimit(int $limit, int $offset)
+    {
+        $parentTable = 'feeds';
+        $foreignKey = 'feed_id';
+        $parentTableNameField = 'name';
+        $parentTableNameFieldAlias = substr($parentTable, 0, strlen($parentTable)-1) . '_' . $parentTableNameField;
+        
+        $sql = 'SELECT ' . $this->table . '.*, ' 
+                . $parentTable . '.' . $parentTableNameField
+                . ' AS ' .  $parentTableNameFieldAlias 
+                . ' FROM ' . $this->table
+                . ' JOIN ' . $parentTable 
+                . ' ON ' 
+                . $this->table . '.' . $foreignKey 
+                . ' = '
+                . $parentTable . '.id';   
+ 
+        // add limit clause
+        $sql .= ' LIMIT ' . $limit . ' OFFSET ' . $offset . ' ';
+
+// print_r(DebugHelper::interpolateQuery($sql, []));
+        
+        try{
+            $stmt = $this->connection->prepare($sql);
+            $stmt->execute();
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch(PDOException $e){
+            echo 'ERROR: ' . $e->getMessage();
+        }
+
+        return $data;
+    }
     
     /**
      * Override BaseModel->getAll

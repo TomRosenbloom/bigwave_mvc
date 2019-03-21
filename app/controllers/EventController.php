@@ -75,6 +75,22 @@ class EventController extends DomainModelController
         $this->view('event/show_all', $data);
     }
 
+    
+    public function show_all_paginated()
+    {
+        $event = $this->model;
+        
+        $page = 1;        
+        
+        $paginator = new Paginator($page, 5, 5, $event->getCount());
+                
+        $data['events_arr'] = $event->getLimit($paginator->get_limit(), $paginator->get_offset());
+        $data['events_json'] = json_encode($data['events_arr']);
+        
+        $data['paginator'] = $paginator;
+
+        $this->view('event/show_all_paginated', $data);        
+    }
 
     /**
      * show just one event

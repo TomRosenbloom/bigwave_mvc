@@ -16,6 +16,7 @@ class Router {
     public function __construct() 
     {
         $this->addRoute("/(admin)/(test)", array("controller", "action"));
+        $this->addRoute("/(.*?)/(.*?)(?:/(.*)){0,}\?(.*)", array("controller", "action", "params", "query_string"));  
         $this->addRoute("/(.*?)/(.*?)(?:/(.*)){0,}", array("controller", "action", "params"));       
         $this->addRoute("/(.*)/(.*)", array("controller", "action"));
         $this->addRoute("/(.*)", array("controller"));

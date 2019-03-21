@@ -8,8 +8,8 @@ class UrlHelper
         header('location: ' . URL_ROOT . '/' . $page);
     }
 
-    function foo()
-    {
-        echo "foo";
+    function current(){
+        $url_parts = explode('?',$_SERVER['REQUEST_URI']);
+        return $url_parts[0];
     }
 }
