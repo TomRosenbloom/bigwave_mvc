@@ -80,15 +80,20 @@ class EventController extends DomainModelController
     {
         $event = $this->model;
         
-        $page = 1;        
+        $page = UrlHelper::param_value('page');        
         
-        $paginator = new Paginator($page, 5, 5, $event->getCount());
+        $paginator = new Paginator($page, 5, 3, $event->getCount());
                 
         $data['events_arr'] = $event->getLimit($paginator->get_limit(), $paginator->get_offset());
         $data['events_json'] = json_encode($data['events_arr']);
         
         $data['paginator'] = $paginator;
 
+        echo $paginator->get_links(), "<br>", 
+             $paginator->get_pages(), "<br>",
+             $paginator->get_current(), "<br>",
+             $paginator->get_range();
+        
         $this->view('event/show_all_paginated', $data);        
     }
 

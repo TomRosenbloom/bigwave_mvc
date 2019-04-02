@@ -8,7 +8,7 @@ class Paginator
     private $_next;
     private $_previous;
     
-    private $_range;
+    private $_range = 5;
     private $_pages;
     private $_per_page;
     private $_total;
@@ -17,8 +17,9 @@ class Paginator
     private $_offset = 0;
     
     private $_message;
+    private $_links;
     
-    function __construct($_page, $_per_page, $_range, $_total) {
+    function __construct($_page, $_per_page, int $_range, $_total) {
         $this->_per_page = $_per_page;
         $this->_range = $_range;
         $this->_total = $_total;
@@ -29,6 +30,7 @@ class Paginator
         $this->set_limit($_per_page);
         $this->set_offset();
         $this->set_next();
+        $this->set_links();
     }
 
     
@@ -41,7 +43,7 @@ class Paginator
     }
 
     function get_last() {
-        return $this->_last;
+        return $this->_pages;
     }
 
     function get_next() {
@@ -76,8 +78,16 @@ class Paginator
         return $this->_message;
     }
     
+    function get_links(){
+        return $this->_links;
+    }
+    
+    function get_range(){
+        return $this->_range;
+    }
+      
     function set_current($_current) {
-        $this->_current = $_current;
+        $this->_current = intval($_current);
     }
 
     function set_first($_first) {
@@ -118,5 +128,36 @@ class Paginator
     
     function set_message() {
         $this->_message = intval($this->_offset) + 1 . " to " . intval($this->_offset + $this->_per_page) . " of " . $this->_total;
+    }
+    
+    function set_links() {
+        $links = '';
+        if($this->_current < $this->_range){ // starting end condition
+            $i = 1; 
+            while($i <= $this->_range && $i <= $this->_pages){
+                $links .= '<a href="' . UrlHelper::current() . '?page=' . $i . '">' . $i . "</a>";
+                $i++;
+            }
+            $links .= '...';
+            $links .= '<a href="' . UrlHelper::current() . '?page=' . $this->get_last() . '">' . $this->get_last() . "</a>";
+        } elseif($this->_current > $this->get_last() - $this->_range) { // ending end condition
+            $links = '<a href="' . UrlHelper::current() . '?page=' . $this->get_first() . '">' . $this->get_first() . "</a>";
+            $links .= '...';            
+            $i = $this->get_last() - $this->_range; 
+            while($i <= $this->_pages){
+                $links .= '<a href="' . UrlHelper::current() . '?page=' . $i . '">' . $i . "</a>";
+                $i++;
+            }            
+        } else { // middle condition
+            $links = '<a href="' . UrlHelper::current() . '?page=' . $this->get_first() . '">' . $this->get_first() . "</a>";
+            $links .= '...';
+            for($i = $this->_current - floor(($this->_range/2)); $i < $this->_current + ceil(($this->_range/2)); $i++){
+                $links .= '<a href="' . UrlHelper::current() . '?page=' . $i . '">' . $i . '</a>';
+            }
+            $links .= '...';
+            $links .= '<a href="' . UrlHelper::current() . '?page=' . $this->get_last() . '">' . $this->get_last() . "</a>";
+        }
+        
+        $this->_links = $links;
     }
 }

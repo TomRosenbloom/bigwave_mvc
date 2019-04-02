@@ -18,7 +18,7 @@ class App
       
         $this->url_tokens = $router->parse($_SERVER['REQUEST_URI']);
         
-        var_dump($this->url_tokens); echo "<br>";
+        //var_dump($this->url_tokens); echo "<br>";
         
         $this->controller = $this->controllerFactory($this->url_tokens);       
         $this->method = $this->setMethod($this->url_tokens);        

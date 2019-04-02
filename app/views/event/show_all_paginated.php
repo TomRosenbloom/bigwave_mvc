@@ -7,11 +7,7 @@
             <?php echo $data['paginator']->get_message(); ?>
         </div>
         <div class="paginationLinks">
-            <?= $data['paginator']->get_first(); ?>
-            <a href="<?= UrlHelper::current(); ?>?page=<?= $data['paginator']->get_next(); ?>"><?= $data['paginator']->get_next(); ?></a>
-            ...
-            
-            <?= $data['paginator']->get_pages(); ?>
+            <?= $data['paginator']->get_links(); ?>
         </div>
     
     <div class="" id="listContainer">
