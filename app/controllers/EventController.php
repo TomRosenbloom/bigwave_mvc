@@ -88,11 +88,10 @@ class EventController extends DomainModelController
         $data['events_json'] = json_encode($data['events_arr']);
         
         $data['paginator'] = $paginator;
+        
+        
 
-        echo $paginator->get_links(), "<br>", 
-             $paginator->get_pages(), "<br>",
-             $paginator->get_current(), "<br>",
-             $paginator->get_range();
+        var_dump($paginator->links_array());
         
         $this->view('event/show_all_paginated', $data);        
     }

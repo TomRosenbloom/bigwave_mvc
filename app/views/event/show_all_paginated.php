@@ -7,7 +7,7 @@
             <?php echo $data['paginator']->get_message(); ?>
         </div>
         <div class="paginationLinks">
-            <?= $data['paginator']->get_links(); ?>
+            <?php PaginationHelper::bootstrapify($data['paginator']->links_array()); ?>
         </div>
     
     <div class="" id="listContainer">

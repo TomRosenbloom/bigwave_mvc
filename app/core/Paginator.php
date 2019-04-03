@@ -160,4 +160,35 @@ class Paginator
         
         $this->_links = $links;
     }
+    
+    public function links_array() {
+         $links = [];
+        if($this->_current < $this->_range){ // starting end condition
+            $i = 1; 
+            while($i <= $this->_range && $i <= $this->_pages){
+                $links[$i] = '<a href="' . UrlHelper::current() . '?page=' . $i . '">' . $i . '</a>';
+                $i++;
+            }
+            $links[] = '...';
+            $links[] = '<a href="' . UrlHelper::current() . '?page=' . $this->get_last() . '">' . $this->get_last() . "</a>";
+        } elseif($this->_current > $this->get_last() - $this->_range) { // ending end condition
+            $links[] = '<a href="' . UrlHelper::current() . '?page=' . $this->get_first() . '">' . $this->get_first() . "</a>";
+            $links[] = '...';            
+            $i = $this->get_last() - $this->_range; 
+            while($i <= $this->_pages){
+                $links[$i] = '<a href="' . UrlHelper::current() . '?page=' . $i . '">' . $i . "</a>";
+                $i++;
+            }            
+        } else { // middle condition
+            $links[] = '<a href="' . UrlHelper::current() . '?page=' . $this->get_first() . '">' . $this->get_first() . "</a>";
+            $links[] = '...';
+            for($i = $this->_current - floor(($this->_range/2)); $i < $this->_current + ceil(($this->_range/2)); $i++){
+                $links[$i] = '<a href="' . UrlHelper::current() . '?page=' . $i . '">' . $i . '</a>';
+            }
+            $links[] = '...';
+            $links[] = '<a href="' . UrlHelper::current() . '?page=' . $this->get_last() . '">' . $this->get_last() . "</a>";
+        }
+        
+        return $links;       
+    }
 }
