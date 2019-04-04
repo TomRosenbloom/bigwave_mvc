@@ -65,12 +65,18 @@ class Event extends BaseModel
 
     
     /**
-     * return array of events filtered by postcode range and origin feed
+     * return array of events filtered by (1) postcode range and (2) origin feed
      * 
+     * a separate query is done for each filter, and the results are intersected
+     * 
+     * this means that the results can't be paginated in the way I've done previously
+     * i.e. applying offset and limit to query
+     * the pagination will have to be done on the intersected results set
+     * that should be ok because I've made my paginator sufficiently general...
      * 
      * @param PostcodeRange $range
      * @param int $feed_id
-     * @return type
+     * @return array
      */
     public function getFiltered(PostcodeRange $range, int $feed_id)
     {

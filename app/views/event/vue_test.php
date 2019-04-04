@@ -73,16 +73,25 @@
                         </form>
                     </div>
 
-<div class="message">
-    <?php echo $data['message'] ?? ''; ?>
-</div>
+                <div class="message">
+                    <?php echo $data['message'] ?? ''; ?>
+                </div>
+                
             </div>
+            
 
-
+        <div class="paginationMessage">
+            <?php echo $data['paginator']->get_message(); ?>
+        </div>
+        <div class="paginationLinks">
+            <?php PaginationHelper::bootstrapify($data['paginator']); ?>
+        </div>
+            
+            
             <div class="" id="listContainer">
-                <?php if(count($data['events_arr']) > 0){ ?>
+                <?php if(count($data['events_page']) > 0){ ?>
                 <div id="listItems" style="height: 600px; overflow: scroll;">
-                    <?php foreach($data['events_arr'] as $event) { ?>
+                    <?php foreach($data['events_page'] as $event) { ?>
                         <div class="" id="event_<?= $event['id']; ?>">
                             <h3><?php echo $event['title']; ?><small class="float-right"><?php echo $event['feed_name']; ?></small></h3>
                             <p>Date: <?php echo $event['event_date']; ?></p>
