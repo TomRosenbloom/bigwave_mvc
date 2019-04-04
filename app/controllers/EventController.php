@@ -89,10 +89,6 @@ class EventController extends DomainModelController
         
         $data['paginator'] = $paginator;
         
-        
-
-        var_dump($paginator->links_array());
-        
         $this->view('event/show_all_paginated', $data);        
     }
 

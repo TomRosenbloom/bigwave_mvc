@@ -214,7 +214,15 @@ class Event extends BaseModel
         return $data;       
     }    
 
-     public function getLimit(int $limit, int $offset)
+    /**
+     * 
+     * perform query with a LIMIT and OFFSET, useful for pagination
+     * 
+     * @param int $limit
+     * @param int $offset
+     * @return type
+     */
+    public function getLimit(int $limit, int $offset)
     {
         $parentTable = 'feeds';
         $foreignKey = 'feed_id';

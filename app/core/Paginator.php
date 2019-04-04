@@ -24,12 +24,16 @@ class Paginator
         $this->_range = $_range;
         $this->_total = $_total;
         
+        // So here I have a mixture of assigning properties directly and using getters/setters
+        // what is the best policy? NB seems like I've mostly used direct assignment for
+        // vars that come as params to the constructor...
+        
         $this->set_current($_page);
         $this->set_pages();
-        $this->set_message();
-        $this->set_limit($_per_page);
         $this->set_offset();
+        $this->set_limit($_per_page);
         $this->set_next();
+        $this->set_message();
         $this->set_links();
     }
 
@@ -118,8 +122,8 @@ class Paginator
         $this->_total = $_total;
     }
 
-    function set_offset() {
-        $this->_offset = 0;
+    function set_offset() {     
+        $this->_offset = ($this->_current - 1) * $this->_per_page;
     }
 
     function set_limit($_limit) {
@@ -130,6 +134,10 @@ class Paginator
         $this->_message = intval($this->_offset) + 1 . " to " . intval($this->_offset + $this->_per_page) . " of " . $this->_total;
     }
     
+    /**
+     * sets $this->_links, a text tring of pagination links (and ellipsis or two)
+     * 
+     */
     function set_links() {
         $links = '';
         if($this->_current < $this->_range){ // starting end condition
@@ -161,6 +169,16 @@ class Paginator
         $this->_links = $links;
     }
     
+    /**
+     * returns pagination links as an array
+     * 
+     * Each member of the array is a string, either a link like
+     * '<a href="current/url?page=1">1</a>' or an ellipsis
+     * The point of this is that an array is easy to post-process in a view helper
+     * e.g. to add Bootstrap HTML and CSS
+     *  
+     * @return array
+     */
     public function links_array() {
          $links = [];
         if($this->_current < $this->_range){ // starting end condition
