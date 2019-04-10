@@ -23,13 +23,26 @@ class ApiController extends BaseController
      *
      * @return [type] [description]
      */
-    public function readOne($id = '')
+    public function readOne()
     {        
         $event = new Event();
-        $id = $event->getFirstId(); // temp: for proof of concept
+        $id = UrlHelper::param_value('id') ?? $event->getFirstId();
         $data = $event->getOneFromId($id);
         $json = json_encode($data);
         $this->view('api/readOne', ['json'=>$json]);
+    }
+    
+//    public function getPage(paginator $paginator)
+    public function getPage()
+    {
+        // get a page of results
+        $event = new Event();
+        $offset = UrlHelper::param_value('offset') ?? 0;
+        $limit = UrlHelper::param_value('limit') ?? 5;
+        $data = $event->getLimit($limit, $offset);
+        $json = json_encode($data);
+        $this->view('api/getPage', ['json'=>$json]);
+
     }
     
 }
