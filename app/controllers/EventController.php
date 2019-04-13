@@ -21,12 +21,14 @@ class EventController extends DomainModelController
     {
         $event = $this->model;
         
+        $data['total'] = $event->getCount();
+        
         // use paginator for initial view, showing page one only
         // all subsequent pagination will be done with js calls to API
-        $page = 1;
-        $range = 3;
-        $per_page = 5;
-        $paginator = new Paginator($page, $per_page, $range, $event->getCount());
+//        $page = 1;
+//        $range = 3;
+//        $per_page = 5;
+//        $paginator = new Paginator($page, $per_page, $range, $event->getCount());
         // pretty sure this isn't the way to do this - should just send to the initial view
         // the data that Vue will use to do an API call for first page...
         // ...but this is a good way to get the original view containing the first page of results - ?
@@ -36,10 +38,10 @@ class EventController extends DomainModelController
         // we need a variant of the paginator that doesn't have real links at all
         // i.e. just html with necessary bootstrap classes and Vue attributes
         
-        $data['paginator'] = $paginator;
+//        $data['paginator'] = $paginator;
         
-        $data['events_page'] = $event->getLimit($paginator->get_limit(), $paginator->get_offset());
-        $data['events_json'] = json_encode($data['events_page']);
+//        $data['events_page'] = $event->getLimit($paginator->get_limit(), $paginator->get_offset());
+//        $data['events_json'] = json_encode($data['events_page']);
                 
         $this->view('event/vue_pagination', $data); 
     }
