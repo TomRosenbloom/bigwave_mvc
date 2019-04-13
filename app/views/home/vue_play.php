@@ -50,6 +50,8 @@
 
 <?php require APP_ROOT . '/views/inc/footer.php'; ?>
 
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
 <script>
 
 Vue.component('event-detail', {
@@ -57,16 +59,26 @@ Vue.component('event-detail', {
   template: '<div><h3>{{ event.title }}</h3></div>'
 })
 
+var url = 'http://localhost.bigwavemvc/api/getPage?offset=0&limit=5';
+
 var eventList = new Vue({
     el: '#events',
+//    data: {
+//        events: [
+//            { id: 0, title: 'Mayor of London\'s Sky Ride' },
+//            { id: 1, title: 'Sky Ride Glasgow' },
+//            { id: 2, title: 'Sky Ride Birmingham' }
+//        ]
+//    }    
     data: {
-        events: [
-            { id: 0, title: 'Mayor of London\'s Sky Ride' },
-            { id: 1, title: 'Sky Ride Glasgow' },
-            { id: 2, title: 'Sky Ride Birmingham' }
-        ]
-    }    
-})
+        events: []
+    },
+    mounted(){
+        axios.get(url).then(response => {
+            this.events = response.data;
+        });
+    }
+});
 
 </script>
 
